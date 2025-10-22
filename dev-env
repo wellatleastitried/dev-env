@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
 
 detect_shell() {
     echo "Detecting shell..."
@@ -49,9 +50,9 @@ ensure_repo_cloned() {
         cd dev-env-stage
         git clone https://github.com/wellatleastitried/dev-env.git || echo "Failed to clone dev-env from Github..." && exit 1
         cp -r ./dev-env/* .
-        DEV_PATH=$(pwd)
+        DEV_ENV_PATH=$(pwd)
         if ! grep -q "PATH_DEV_ENV" ~/.bashrc; then
-            echo "export PATH_DEV_ENV=$DEV_PATH" >> ~/.bashrc
+            echo "export PATH_DEV_ENV=$DEV_ENV_PATH" >> ~/.bashrc
         fi
         PACKAGE_FILE=./package_list.txt
         if [ ! -f $PACKAGE_FILE ]; then
@@ -63,13 +64,13 @@ ensure_repo_cloned() {
             done
         fi
     else
-        DEV_PATH=$(pwd)
+        DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
     fi
     echo "Inside dev-env repository."
 }
 
 check_for_changes() {
-    cd $DEV_PATH
+    cd $DEV_ENV_PATH
     if git status | grep -q "nothing to commit"; then
         echo "No changes, proceeding with update..."
     else
@@ -90,7 +91,7 @@ renew_nvim_config() {
         rm -rf ~/.config/nvim
     fi
     mkdir -p ~/.config
-    cp -r ./config/nvim ~/.config/
+    cp -r "$DEV_ENV_PATH/config/nvim" ~/.config/
     echo "nvim config renewed."
 }
 
