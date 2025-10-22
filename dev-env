@@ -15,13 +15,19 @@ detect_shell() {
 
 install_package() {
     PACKAGE_NAME=$1
+    if ! command -v $PACKAGE_NAME; then
+        echo "$PACKAGE_NAME not installed: installing $PACKAGE_NAME"
+    else
+        echo "$PACKAGE_NAME is already installed."
+        return
+    fi
     if command -v apt-get; then
         sudo apt-get update
         sudo apt-get install -y $PACKAGE_NAME
     elif command -v pacman; then
         sudo pacman -Syu $PACKAGE_NAME
     else
-        echo "No supported package manager found. Please install $PACKAGE_NAME manually."
+        echo "No supported package manager found. Install $PACKAGE_NAME manually."
         exit 1
     fi
 }
@@ -37,7 +43,7 @@ ensure_git_installed() {
 
 ensure_repo_cloned() {
     echo "Checking if inside dev-env repository..."
-    if [ ! -d ./.config ] || [ ! -d other ]; then
+    if ! grep -q "f3bbd53a6dac5aa71fdad71cad50bc1db0b2409d394a5206a4933d6f8c34bd06" .dev-env-hash; then
         echo "dev-env not found: cloning repo"
         mkdir dev-env-stage
         cd dev-env-stage
@@ -46,6 +52,15 @@ ensure_repo_cloned() {
         DEV_PATH=$(pwd)
         if ! grep -q "PATH_DEV_ENV" ~/.bashrc; then
             echo "export PATH_DEV_ENV=$DEV_PATH" >> ~/.bashrc
+        fi
+        PACKAGE_FILE=./package_list.txt
+        if [ ! -f $PACKAGE_FILE ]; then
+            echo "Package list file not found, what the fuck just happened."
+            exit 1
+        else
+            for package in $(cat $PACKAGE_FILE); do
+                install_package $package
+            done
         fi
     fi
     echo "Inside dev-env repository."
@@ -57,7 +72,7 @@ renew_nvim_config() {
         rm -rf ~/.config/nvim
     fi
     mkdir -p ~/.config
-    cp -r ./nvim ~/.config/
+    cp -r ./config/nvim ~/.config/
     echo "nvim config renewed."
 }
 
@@ -89,6 +104,7 @@ add_path() {
 
 add_custom_line() {
     detect_shell
+    echo "Make sure this is valid bash, it is just being appended to your rc file."
     read -p "Enter the custom line to add to your shell configuration: " custom_line
     echo "$custom_line" >> "$HOME/.$(echo $shell)rc"
     echo "Custom line added to $HOME/.$(echo $shell)rc"
@@ -98,16 +114,15 @@ show_help() {
     echo "Usage: $0 command"
     echo "Commands:"
     echo "  update    Update the development environment configurations"
-    echo "  help      Show this help message"
+    echo "  help      Show this help message. CAN ALSO BE USED AS: '[command] help' for more info on a specific command"
     echo "  add       choose what to add to env (alias, PATH, custom line to .bashrc)"
 }
 
-main() {
-    if [ $# -ne 1 ] || [ "$1" == "update" ]; then
-        update_configs
-    elif [ "$1" == "help" ]; then
+if [ -z "$1" ] || [ "$1" == "update" ]; then
+    update_configs
+elif [ -z "$2" ]; then
+    if [ "$1" == "help" ]; then
         show_help
-        exit 0
     elif [ "$1" == "add" ]; then
         select choice in "Alias" "PATH" "Custom" "Exit"; do
             case $choice in
@@ -117,8 +132,45 @@ main() {
                 Exit ) echo "Exiting..."; exit 0;;
             esac
         done
+    fi
+elif [ -z "$3" ]; then
+    if [ "$1" == "help" ]; then
+        if [ "$2" == "help" ]; then
+            echo "$0 help hypr: Shows syntax to modify hyprland keybinds."
+            echo "$0 help i3: Shows syntax to modify i3wm keybinds."
+            echo "$0 help vim: Shows how to exit vim :)"
+        elif [ "$2" == "hypr" ]; then
+            echo "Find your config file. Likely in ~/.config/hypr/hyprland.conf"
+            echo "  Unbind the existing keybind if it is already set using: unbind = SUPER, left"
+            echo "  Set a new keybind using (example): bindd = SUPER, H, Move focus left, movefocus, l"
+        elif [ "$2" == "i3" ]; then
+            echo "Find your config file. Likely in ~/.config/i3/config"
+            echo "  Set a new keybind using (example): bindsym $mod+H focus left"
+        elif [ "$2" == "vim" ]; then
+            echo "How to exit vim/nvim:"
+            echo "  Wait holy shit I completely forgot..."
+        else
+            show_help
+        fi
+    elif [ "$1" == "add" ]; then
+        if [ "$2" == "help" ]; then
+            echo "Usage: $0 add [alias|path|custom]"
+            echo "  alias  - Add a new alias to your shell configuration"
+            echo "  path   - Add a new path to your PATH environment variable"
+            echo "  custom - Add a custom line to your shell configuration"
+        elif [ "$2" == "alias" ]; then
+            add_alias
+        elif [ "$2" == "path" ]; then
+            add_path
+        elif [ "$2" == "custom" ]; then
+            add_custom_line
+        else
+            show_help
+        fi
     else
         show_help
-        exit 1
     fi
-}
+else
+    show_help
+fi
+
