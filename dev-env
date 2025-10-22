@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
 
 detect_shell() {
     echo "Detecting shell..."
@@ -104,7 +103,7 @@ update_configs() {
     ensure_git_installed
     ensure_repo_cloned
     check_for_changes
-    # renew_configs
+    renew_configs
 }
 
 add_alias() {

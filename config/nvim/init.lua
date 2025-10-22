@@ -1,1 +1,1 @@
-require("nomarchy")
+require("config.lazy")
