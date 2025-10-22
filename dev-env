@@ -62,8 +62,26 @@ ensure_repo_cloned() {
                 install_package $package
             done
         fi
+    else
+        DEV_PATH=$(pwd)
     fi
     echo "Inside dev-env repository."
+}
+
+check_for_changes() {
+    cd $DEV_PATH
+    if git status | grep -q "nothing to commit"; then
+        echo "No changes, proceeding with update..."
+    else
+        read -p "There are changes to your configs, would you like to commit/push these changes to vc? (Y/n)" resp
+        if [[ ! $resp =~ ^[Yy]$ ]]; then
+            echo "bang"
+        else
+            git add .
+            git commit -m "New updates to configs"
+            git push
+        fi
+    fi
 }
 
 renew_nvim_config() {
@@ -84,7 +102,8 @@ update_configs() {
     detect_shell
     ensure_git_installed
     ensure_repo_cloned
-    renew_configs
+    check_for_changes
+    # renew_configs
 }
 
 add_alias() {
