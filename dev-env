@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+
+detect_shell() {
+    echo "Detecting shell..."
+    if [ -n "$ZSH_VERSION" ]; then
+        shell="zsh"
+    elif [ -n "$BASH_VERSION" ]; then
+        shell="bash"
+    else
+        echo "Unsupported shell. Please use bash or zsh."
+        exit 1
+    fi
+    echo "Detected shell: $shell"
+}
+
+install_package() {
+    PACKAGE_NAME=$1
+    if command -v apt-get; then
+        sudo apt-get update
+        sudo apt-get install -y $PACKAGE_NAME
+    elif command -v pacman; then
+        sudo pacman -Syu $PACKAGE_NAME
+    else
+        echo "No supported package manager found. Please install $PACKAGE_NAME manually."
+        exit 1
+    fi
+}
+
+ensure_git_installed() {
+    echo "Checking for git installation..."
+    if ! command -v git; then
+        echo "git not installed: installing git"
+        install_package git
+    fi
+    echo "git is installed."
+}
+
+ensure_repo_cloned() {
+    echo "Checking if inside dev-env repository..."
+    if [ ! -d ./.config ] || [ ! -d other ]; then
+        echo "dev-env not found: cloning repo"
+        mkdir dev-env-stage
+        cd dev-env-stage
+        git clone https://github.com/wellatleastitried/dev-env.git || echo "Failed to clone dev-env from Github..." && exit 1
+        cp -r ./dev-env/* .
+        DEV_PATH=$(pwd)
+        if ! grep -q "PATH_DEV_ENV" ~/.bashrc; then
+            echo "export PATH_DEV_ENV=$DEV_PATH" >> ~/.bashrc
+        fi
+    fi
+    echo "Inside dev-env repository."
+}
+
+renew_nvim_config() {
+    if [ -d ~/.config/nvim ]; then
+        echo "Renewing nvim config"
+        rm -rf ~/.config/nvim
+    fi
+    mkdir -p ~/.config
+    cp -r ./nvim ~/.config/
+    echo "nvim config renewed."
+}
+
+renew_configs() {
+    renew_nvim_config
+}
+
+update_configs() {
+    detect_shell
+    ensure_git_installed
+    ensure_repo_cloned
+    renew_configs
+}
+
+add_alias() {
+    detect_shell
+    read -p "Enter alias name: " alias_name
+    read -p "Enter command for alias '$alias_name': " alias_command
+    echo "alias $alias_name='$alias_command'" >> "$HOME/.$(echo $shell)rc"
+    echo "Alias '$alias_name' added to $HOME/.$(echo $shell)rc"
+}
+
+add_path() {
+    detect_shell
+    read -p "Enter the path to add to PATH: " new_path
+    echo "export PATH=\"\$PATH:$new_path\"" >> "$HOME/.$(echo $shell)rc"
+    echo "Path '$new_path' added to PATH in $HOME/.$(echo $shell)rc"
+}
+
+add_custom_line() {
+    detect_shell
+    read -p "Enter the custom line to add to your shell configuration: " custom_line
+    echo "$custom_line" >> "$HOME/.$(echo $shell)rc"
+    echo "Custom line added to $HOME/.$(echo $shell)rc"
+}
+
+show_help() {
+    echo "Usage: $0 command"
+    echo "Commands:"
+    echo "  update    Update the development environment configurations"
+    echo "  help      Show this help message"
+    echo "  add       choose what to add to env (alias, PATH, custom line to .bashrc)"
+}
+
+main() {
+    if [ $# -ne 1 ] || [ "$1" == "update" ]; then
+        update_configs
+    elif [ "$1" == "help" ]; then
+        show_help
+        exit 0
+    elif [ "$1" == "add" ]; then
+        select choice in "Alias" "PATH" "Custom" "Exit"; do
+            case $choice in
+                Alias ) add_alias; break;;
+                PATH ) add_path; break;;
+                Custom ) add_custom_line; break;;
+                Exit ) echo "Exiting..."; exit 0;;
+            esac
+        done
+    else
+        show_help
+        exit 1
+    fi
+}
