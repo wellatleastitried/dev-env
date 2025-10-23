@@ -89,7 +89,6 @@ add_custom_line() {
 edit_configs() {
     detect_shell
     ensure_repo_staged
-    echo "$(pwd)"
     if [ -z "$EDITOR" ]; then
         EDITOR="vim"
     else
