@@ -7,3 +7,4 @@ vim.keymap.set("n", "<leader>e", vim.cmd.Ex, { desc = "Open file explorer" })
 vim.keymap.set("n", "<leader>E", vim.cmd.Ex, { desc = "Open file explorer" })
 vim.keymap.set("n", "<leader>fe", vim.cmd.Ex, { desc = "Open file explorer" })
 
+vim.keymap.del("n", "s")

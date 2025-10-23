@@ -7,88 +7,17 @@ detect_shell() {
     elif [ -n "$BASH_VERSION" ]; then
         shell="bash"
     else
-        echo "Unsupported shell. Please use bash or zsh."
+        echo "Unsupported shell. You need either bash or zsh for this."
         exit 1
     fi
     echo "Detected shell: $shell"
 }
 
-install_package() {
-    PACKAGE_NAME=$1
-    if ! command -v $PACKAGE_NAME; then
-        echo "$PACKAGE_NAME not installed: installing $PACKAGE_NAME"
-    else
-        echo "$PACKAGE_NAME is already installed."
-        return
-    fi
-    if command -v apt-get; then
-        sudo apt-get update
-        sudo apt-get install -y $PACKAGE_NAME
-    elif command -v pacman; then
-        sudo pacman -Syu $PACKAGE_NAME
-    else
-        echo "No supported package manager found. Install $PACKAGE_NAME manually."
-        exit 1
-    fi
-}
-
-ensure_git_installed() {
-    echo "Checking for git installation..."
-    if ! command -v git; then
-        echo "git not installed: installing git"
-        install_package git
-    fi
-    echo "git is installed."
-}
-
-install_packages() {
-    PACKAGE_FILE=./package_list.txt
-    if [ ! -f $PACKAGE_FILE ]; then
-        echo "Package list file not found, what the fuck just happened."
-        exit 1
-    else
-        for package in $(cat $PACKAGE_FILE); do
-            install_package $package
-        done
-    fi
-}
-
-clone_dev_repo() {
-    mkdir dev-env-stage
-    cd dev-env-stage
-    git clone https://github.com/wellatleastitried/dev-env.git || echo "Failed to clone dev-env from Github..." && exit 1
-    cp -r ./dev-env/* .
-    DEV_ENV_PATH=$(pwd)
-}
-
-install_xnote() {
-    cd /tmp
-    git clone https://github.com/wellatleastitried/xnote.git
-    cd xnote
-    sudo install xnote
-    cd $DEV_ENV_PATH
-}
-
-ensure_tools_installed() {
-    if ! which xnote; then
-        install-xnote
-    fi
-}
-
-ensure_repo_cloned() {
-    echo "Checking if inside dev-env repository..."
-    if ! grep -q "f3bbd53a6dac5aa71fdad71cad50bc1db0b2409d394a5206a4933d6f8c34bd06" .dev-env-hash; then
-        echo "dev-env not found: cloning repo"
-        clone_dev_repo
-        if ! grep -q "PATH_DEV_ENV" ~/.bashrc; then
-            echo "export PATH_DEV_ENV=$DEV_ENV_PATH" >> ~/.bashrc
-        fi
-        install_packages
-        ensure_tools_installed
-    else
+ensure_repo_staged() {
+    if ! grep -q "PATH_DEV_ENV" ~/."$shell"rc; then
         DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+        echo "export PATH_DEV_ENV=$DEV_ENV_PATH" >> ~/."$shell"rc
     fi
-    echo "Inside dev-env repository."
 }
 
 check_for_changes() {
@@ -98,7 +27,7 @@ check_for_changes() {
     else
         read -p "There are changes to your configs, would you like to commit/push these changes to vc? (Y/n)" resp
         if [[ ! $resp =~ ^[Yy]$ ]]; then
-            echo "bang"
+            echo "Skipping commit/push of changes."
         else
             git add .
             git commit -m "New updates to configs"
@@ -115,6 +44,8 @@ renew_nvim_config() {
     mkdir -p ~/.config
     cp -r "$DEV_ENV_PATH/config/nvim" ~/.config/
     echo "nvim config renewed."
+
+    # Set up Omarchy hook for theme syncing
     HOOKS_DIR="$HOME/.config/omarchy/hooks"
     if [ -d "$HOOKS_DIR" ]; then
         if [ ! -f "$HOOKS_DIR/theme-set" ]; then
@@ -132,8 +63,7 @@ renew_configs() {
 
 update_configs() {
     detect_shell
-    ensure_git_installed
-    ensure_repo_cloned
+    ensure_repo_staged
     check_for_changes
     renew_configs
 }
