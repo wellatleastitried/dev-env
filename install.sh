@@ -27,10 +27,10 @@ set_access() {
 
 detect_shell() {
     echo "Detecting shell..."
-    if [ -z "$ZSH_VERSION" ]; then
-        shell="zsh"
-    elif [ -z "$BASH_VERSION" ]; then
+    if [ -n "$BASH_VERSINFO" ]; then
         shell="bash"
+    elif [ -n "$ZSH_VERSION" ]; then
+        shell="zsh"
     else
         echo "Unsupported shell. You need either bash or zsh for this."
         exit 1
