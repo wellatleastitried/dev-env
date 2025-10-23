@@ -2,7 +2,7 @@
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 check_for_updates() {
     echo "Checking for updates..."
     if git fetch --dry-run 2>/dev/null; then
@@ -48,9 +48,9 @@ check_for_changes() {
             echo -e "${YELLOW}There are changes to your configs, would you like to commit/push these changes to vc? (Y/n)${NC}"
             read resp
             if [[ ! $resp =~ ^[Yy]$ ]]; then
-                echo "Skipping commit/push of changes."
+                echo -e "${YELLOW}Skipping commit/push of changes.${NC}"
             else
-                git add . 2>/dev/null
+                git add .
                 git commit -m "New updates to configs" 2>/dev/null
                 git push 2>/dev/null
             fi
