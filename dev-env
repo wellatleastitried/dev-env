@@ -23,21 +23,22 @@ elif [ -z "$2" ]; then
     elif [ "$1" == "add" ]; then
         select choice in "Alias" "PATH" "Custom" "Exit"; do
             case $choice in
-            Alias)
-                add_alias
-                break
-                ;;
-            PATH)
-                add_path
-                break
-                ;;
-            Custom)
-                add_custom_line
-                break
-                ;;
-            Exit)
-                echo "Exiting..."
-                ;;
+                Alias)
+                    source "$PATH_DEV_ENV/scripts/dev-env-add-alias"
+                    break
+                    ;;
+                PATH)
+                    source "$PATH_DEV_ENV/scripts/dev-env-add-path"
+                    break
+                    ;;
+                Custom)
+                    source "$PATH_DEV_ENV/scripts/dev-env-add-custom-line"
+                    break
+                    ;;
+                Exit)
+                    echo "Exiting..."
+                    exit 0
+                    ;;
             esac
         done
         exit 0
