@@ -1,10 +1,10 @@
 #!/bin/bash
 
 echo "Detecting shell..."
-if [ -z "$ZSH_VERSION" ]; then
-    shell="zsh"
-elif [ -z "$BASH_VERSION" ]; then
+if [ -n "$BASH_VERSINFO" ]; then
     shell="bash"
+elif [ -n "$ZSH_VERSION" ]; then
+    shell="zsh"
 else
     echo -e "${RED}Unsupported shell. You need either bash or zsh for this.${NC}"
     exit 1

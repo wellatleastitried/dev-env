@@ -3,7 +3,7 @@
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 teach_em() {
     echo -e "${YELLOW}No argument provided, you need to either pass:${NC}"
@@ -23,6 +23,10 @@ set_access() {
     fi
     echo "Saving access perms: $1"
     echo "export PERMS_DEV_ENV=\"$1\"" >>$HOME/."$shell"rc
+}
+
+set_perms() {
+    chmod +x scripts/*
 }
 
 detect_shell() {
@@ -93,6 +97,7 @@ ensure_repo_staged() {
 
 detect_shell
 set_access $1
+set_perms
 ensure_repo_staged
 install_packages
 ensure_tools_installed
