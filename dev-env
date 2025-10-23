@@ -50,7 +50,7 @@ check_for_changes() {
             if [[ ! $resp =~ ^[Yy]$ ]]; then
                 echo "Skipping commit/push of changes."
             else
-                git add .
+                git add . 2>/dev/null
                 git commit -m "New updates to configs" 2>/dev/null
                 git push 2>/dev/null
             fi
