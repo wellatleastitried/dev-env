@@ -42,7 +42,7 @@ renew_nvim_config() {
         rm -rf ~/.config/nvim
     fi
     mkdir -p ~/.config
-    cp -r "$DEV_ENV_PATH/config/nvim" ~/.config/
+    cp -r "$PATH_DEV_ENV/config/nvim" ~/.config/
     echo "nvim config renewed."
 
     # Set up Omarchy hook for theme syncing
