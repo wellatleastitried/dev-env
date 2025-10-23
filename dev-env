@@ -1,4 +1,18 @@
 #!/bin/bash
+check_for_updates() {
+    echo "Checking for updates..."
+    if git fetch --dry-run 2>/dev/null; then
+        if [ "$(git rev-parse HEAD)" != "$(git rev-parse @{u})" ]; then
+            echo "Updates available. Pulling latest changes..."
+            git pull
+        else
+            echo "No updates available."
+        fi
+    else
+        echo "Error checking for updates. Ensure you are in a git repository."
+        exit 1
+    fi
+}
 detect_shell() {
     echo "Detecting shell..."
     if [ -z "$ZSH_VERSION" ]; then
@@ -12,6 +26,7 @@ detect_shell() {
     echo "Detected shell: $shell"
 }
 ensure_repo_staged() {
+    check_for_updates
     if ! grep -q "PATH_DEV_ENV" ~/."$shell"rc; then
         DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
         PATH_DEV_ENV="$DEV_ENV_PATH"
