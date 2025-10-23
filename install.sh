@@ -2,9 +2,9 @@
 
 detect_shell() {
     echo "Detecting shell..."
-    if [ -n "$ZSH_VERSION" ]; then
+    if [ -z "$ZSH_VERSION" ]; then
         shell="zsh"
-    elif [ -n "$BASH_VERSION" ]; then
+    elif [ -z "$BASH_VERSION" ]; then
         shell="bash"
     else
         echo "Unsupported shell. You need either bash or zsh for this."
@@ -59,15 +59,16 @@ install_xnote() {
 }
 
 ensure_repo_staged() {
-    if ! grep -q "PATH_DEV_ENV" ~/.bashrc; then
+    if ! grep -q "PATH_DEV_ENV" $HOME/."$shell"rc; then
         DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
-        echo "export PATH_DEV_ENV=$DEV_ENV_PATH" >> ~/.bashrc
+        echo "export PATH_DEV_ENV=$DEV_ENV_PATH" >>$HOME/."$shell"rc
+        echo "export PATH=$PATH:$DEV_ENV_PATH" >>$HOME/."$shell"rc
     fi
 }
 
+detect_shell
 ensure_repo_staged
 install_packages
 ensure_tools_installed
 
 echo "When modifying your configs, do it in this repos config folder. It will make deploying/saving the configuration simpler."
-
