@@ -1,5 +1,30 @@
 #!/bin/bash
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+teach_em() {
+    echo -e "${YELLOW}No argument provided, you need to either pass:${NC}"
+    echo -e "${YELLOW}  - 'user' to install the project for non-owners of the repo${NC}"
+    echo -e "${YELLOW}  - 'full' to install the project for owners of the repo${NC}"
+    echo -e "${RED}If you lie about this, the dev-env script WILL NOT work correctly.${NC}"
+    exit 1
+}
+
+if [ -z "$1" ]; then
+    teach_em
+fi
+
+set_access() {
+    if [ "$1" != "user" ] && [ "$1" != "full" ]; then
+        teach_em
+    fi
+    echo "Saving access perms: $1"
+    echo "export PERMS_DEV_ENV=\"$1\"" >>$HOME/."$shell"rc
+}
+
 detect_shell() {
     echo "Detecting shell..."
     if [ -z "$ZSH_VERSION" ]; then
@@ -62,13 +87,14 @@ ensure_repo_staged() {
     if ! grep -q "PATH_DEV_ENV" $HOME/."$shell"rc; then
         DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
         echo "export PATH_DEV_ENV=\"$DEV_ENV_PATH\"" >>$HOME/."$shell"rc
-        echo "export PATH=$PATH:$DEV_ENV_PATH" >>$HOME/."$shell"rc
+        echo "export PATH=\$PATH:$DEV_ENV_PATH" >>$HOME/."$shell"rc
     fi
 }
 
 detect_shell
+set_access $1
 ensure_repo_staged
 install_packages
 ensure_tools_installed
 
-echo "When modifying your configs, do it in this repos config folder. It will make deploying/saving the configuration simpler."
+echo "When modifying your configs, do it in this repos config folder using 'dev-env edit'. It will make deploying/saving the configuration simpler."

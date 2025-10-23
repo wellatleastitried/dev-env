@@ -22,16 +22,19 @@ ensure_repo_staged() {
     cd $PATH_DEV_ENV
 }
 check_for_changes() {
-    if git status | grep -q "nothing to commit"; then
-        echo "No changes, proceeding with update..."
-    else
-        read -p "There are changes to your configs, would you like to commit/push these changes to vc? (Y/n)" resp
-        if [[ ! $resp =~ ^[Yy]$ ]]; then
-            echo "Skipping commit/push of changes."
+    echo "$PERMS_DEV_ENV"
+    if [ "$PERMS_DEV_ENV" == "full" ]; then
+        if git status | grep -q "nothing to commit"; then
+            echo "No changes, proceeding with update..."
         else
-            git add .
-            git commit -m "New updates to configs"
-            git push
+            read -p "There are changes to your configs, would you like to commit/push these changes to vc? (Y/n)" resp
+            if [[ ! $resp =~ ^[Yy]$ ]]; then
+                echo "Skipping commit/push of changes."
+            else
+                git add .
+                git commit -m "New updates to configs"
+                git push
+            fi
         fi
     fi
 }
