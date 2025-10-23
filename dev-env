@@ -1,4 +1,8 @@
 #!/bin/bash
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # No Color
 check_for_updates() {
     echo "Checking for updates..."
     if git fetch --dry-run 2>/dev/null; then
@@ -9,7 +13,7 @@ check_for_updates() {
             echo "No updates available."
         fi
     else
-        echo "Error checking for updates. Ensure you are in a git repository."
+        echo "${RED}Error checking for updates. Ensure you are in a git repository.${NC}"
         exit 1
     fi
 }
@@ -20,7 +24,7 @@ detect_shell() {
     elif [ -z "$BASH_VERSION" ]; then
         shell="bash"
     else
-        echo "Unsupported shell. You need either bash or zsh for this."
+        echo -e "${RED}Unsupported shell. You need either bash or zsh for this.${NC}"
         exit 1
     fi
     echo "Detected shell: $shell"
@@ -41,7 +45,8 @@ check_for_changes() {
         if git status | grep -q "nothing to commit"; then
             echo "No changes, proceeding with update..."
         else
-            read -p "There are changes to your configs, would you like to commit/push these changes to vc? (Y/n)" resp
+            echo -e "${YELLOW}There are changes to your configs, would you like to commit/push these changes to vc? (Y/n)${NC}"
+            read resp
             if [[ ! $resp =~ ^[Yy]$ ]]; then
                 echo "Skipping commit/push of changes."
             else
