@@ -6,7 +6,7 @@ YELLOW='\033[0;33m'
 NC='\033[0m'
 
 show_help() {
-    echo "Usage: $0 command"
+    echo "Usage: $(basename $0) command"
     echo "Commands:"
     echo "  update    Update the development environment configurations"
     echo "  help      Show this help message. CAN ALSO BE USED AS: '[command] help' for more info on a specific command"
@@ -48,9 +48,9 @@ elif [ -z "$2" ]; then
 elif [ -z "$3" ]; then
     if [ "$1" == "help" ]; then
         if [ "$2" == "help" ]; then
-            echo "$0 help hypr: Shows syntax to modify hyprland keybinds."
-            echo "$0 help i3: Shows syntax to modify i3wm keybinds."
-            echo "$0 help vim: Shows how to exit vim :)"
+            echo "$(basename $0) help hypr: Shows syntax to modify hyprland keybinds."
+            echo "$(basename $0) help i3: Shows syntax to modify i3wm keybinds."
+            echo "$(basename $0) help vim: Shows how to exit vim :)"
             exit 0
         elif [ "$2" == "hypr" ]; then
             echo "Find your config file. Likely in ~/.config/hypr/hyprland.conf"
@@ -68,7 +68,7 @@ elif [ -z "$3" ]; then
         fi
     elif [ "$1" == "add" ]; then
         if [ "$2" == "help" ]; then
-            echo "Usage: $0 add [alias|path|custom]"
+            echo "Usage: $(basename $0) add [alias|path|custom]"
             echo "  alias  - Add a new alias to your shell configuration"
             echo "  path   - Add a new path to your PATH environment variable"
             echo "  custom - Add a custom line to your shell configuration"
