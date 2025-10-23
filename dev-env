@@ -1,5 +1,4 @@
 #!/bin/bash
-
 detect_shell() {
     echo "Detecting shell..."
     if [ -z "$ZSH_VERSION" ]; then
@@ -12,7 +11,6 @@ detect_shell() {
     fi
     echo "Detected shell: $shell"
 }
-
 ensure_repo_staged() {
     if ! grep -q "PATH_DEV_ENV" ~/."$shell"rc; then
         DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
@@ -21,10 +19,9 @@ ensure_repo_staged() {
     else
         echo "PATH_DEV_ENV already set in your rc file."
     fi
-}
-
-check_for_changes() {
     cd $PATH_DEV_ENV
+}
+check_for_changes() {
     if git status | grep -q "nothing to commit"; then
         echo "No changes, proceeding with update..."
     else
@@ -38,7 +35,6 @@ check_for_changes() {
         fi
     fi
 }
-
 renew_nvim_config() {
     if [ -d ~/.config/nvim ]; then
         echo "Renewing nvim config"
@@ -47,7 +43,6 @@ renew_nvim_config() {
     mkdir -p ~/.config
     cp -r "$PATH_DEV_ENV/config/nvim" ~/.config/
     echo "nvim config renewed."
-
     # Set up Omarchy hook for theme syncing
     HOOKS_DIR="$HOME/.config/omarchy/hooks"
     if [ -d "$HOOKS_DIR" ]; then
@@ -59,18 +54,15 @@ renew_nvim_config() {
     fi
 
 }
-
 renew_configs() {
     renew_nvim_config
 }
-
 update_configs() {
     detect_shell
     ensure_repo_staged
     check_for_changes
     renew_configs
 }
-
 add_alias() {
     detect_shell
     read -p "Enter alias name: " alias_name
@@ -78,14 +70,12 @@ add_alias() {
     echo "alias $alias_name='$alias_command'" >>"$HOME/.$(echo $shell)rc"
     echo "Alias '$alias_name' added to $HOME/.$(echo $shell)rc"
 }
-
 add_path() {
     detect_shell
     read -p "Enter the path to add to PATH: " new_path
     echo "export PATH=\"\$PATH:$new_path\"" >>"$HOME/.$(echo $shell)rc"
     echo "Path '$new_path' added to PATH in $HOME/.$(echo $shell)rc"
 }
-
 add_custom_line() {
     detect_shell
     echo "Make sure this is valid bash, it is just being appended to your rc file."
@@ -93,7 +83,16 @@ add_custom_line() {
     echo "$custom_line" >>"$HOME/.$(echo $shell)rc"
     echo "Custom line added to $HOME/.$(echo $shell)rc"
 }
-
+edit_configs() {
+    detect_shell
+    ensure_repo_staged
+    echo "$(pwd)"
+    if [ -z "$EDITOR" ]; then
+        EDITOR="vim"
+    else
+        $EDITOR "$PATH_DEV_ENV/config"
+    fi
+}
 show_help() {
     echo "Usage: $0 command"
     echo "Commands:"
@@ -101,12 +100,13 @@ show_help() {
     echo "  help      Show this help message. CAN ALSO BE USED AS: '[command] help' for more info on a specific command"
     echo "  add       choose what to add to env (alias, PATH, custom line to .bashrc)"
 }
-
 if [ -z "$1" ] || [ "$1" == "update" ]; then
     update_configs
+    exit 0
 elif [ -z "$2" ]; then
     if [ "$1" == "help" ]; then
         show_help
+        exit 0
     elif [ "$1" == "add" ]; then
         select choice in "Alias" "PATH" "Custom" "Exit"; do
             case $choice in
@@ -124,10 +124,13 @@ elif [ -z "$2" ]; then
                 ;;
             Exit)
                 echo "Exiting..."
-                exit 0
                 ;;
             esac
         done
+        exit 0
+    elif [ "$1" == "edit" ]; then
+        edit_configs
+        exit 0
     fi
 elif [ -z "$3" ]; then
     if [ "$1" == "help" ]; then
@@ -135,18 +138,20 @@ elif [ -z "$3" ]; then
             echo "$0 help hypr: Shows syntax to modify hyprland keybinds."
             echo "$0 help i3: Shows syntax to modify i3wm keybinds."
             echo "$0 help vim: Shows how to exit vim :)"
+            exit 0
         elif [ "$2" == "hypr" ]; then
             echo "Find your config file. Likely in ~/.config/hypr/hyprland.conf"
             echo "  Unbind the existing keybind if it is already set using: unbind = SUPER, left"
             echo "  Set a new keybind using (example): bindd = SUPER, H, Move focus left, movefocus, l"
+            exit 0
         elif [ "$2" == "i3" ]; then
             echo "Find your config file. Likely in ~/.config/i3/config"
             echo "  Set a new keybind using (example): bindsym $mod+H focus left"
+            exit 0
         elif [ "$2" == "vim" ]; then
             echo "How to exit vim/nvim:"
             echo "  Wait holy shit I completely forgot..."
-        else
-            show_help
+            exit 0
         fi
     elif [ "$1" == "add" ]; then
         if [ "$2" == "help" ]; then
@@ -154,18 +159,23 @@ elif [ -z "$3" ]; then
             echo "  alias  - Add a new alias to your shell configuration"
             echo "  path   - Add a new path to your PATH environment variable"
             echo "  custom - Add a custom line to your shell configuration"
+            exit 0
         elif [ "$2" == "alias" ]; then
             add_alias
+            exit 0
         elif [ "$2" == "path" ]; then
             add_path
+            exit 0
         elif [ "$2" == "custom" ]; then
             add_custom_line
-        else
-            show_help
+            exit 0
         fi
-    else
-        show_help
+    elif [ "$1" == "edit" ]; then
+        if [ "$2" == "help" ]; then
+            echo "Open the configs for your dev-env in your editor."
+            exit 0
+        fi
     fi
-else
-    show_help
 fi
+show_help
+exit 1
