@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source "$PATH_DEV_ENV/scripts/dev-env-detect-shell"
+read -p "Enter alias name: " alias_name
+read -p "Enter command for alias '$alias_name': " alias_command
+echo "alias $alias_name='$alias_command'" >>"$HOME/.$(echo $shell)rc"
+echo "Alias '$alias_name' added to $HOME/.$(echo $shell)rc"

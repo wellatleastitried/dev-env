@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source "$PATH_DEV_ENV/scripts/dev-env-detect-shell"
+echo "Make sure this is valid bash, it is just being appended to your rc file."
+read -p "Enter the custom line to add to your shell configuration: " custom_line
+echo "$custom_line" >>"$HOME/.$(echo $shell)rc"
+echo "Custom line added to $HOME/.$(echo $shell)rc"

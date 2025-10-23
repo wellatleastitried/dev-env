@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source "$PATH_DEV_ENV/scripts/dev-env-detect-shell"
+read -p "Enter the path to add to PATH: " new_path
+echo "export PATH=\"\$PATH:$new_path\"" >>"$HOME/.$(echo $shell)rc"
+echo "Path '$new_path' added to PATH in $HOME/.$(echo $shell)rc"

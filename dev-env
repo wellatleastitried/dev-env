@@ -1,119 +1,10 @@
 #!/bin/bash
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m'
-check_for_updates() {
-    echo "Checking for updates..."
-    if git fetch --dry-run 2>/dev/null; then
-        if [ "$(git rev-parse HEAD)" != "$(git rev-parse @{u})" ]; then
-            echo "Updates available. Pulling latest changes..."
-            git pull
-        else
-            echo "No updates available."
-        fi
-    else
-        echo "${RED}Error checking for updates. Ensure you are in a git repository.${NC}"
-        exit 1
-    fi
-}
-detect_shell() {
-    echo "Detecting shell..."
-    if [ -z "$ZSH_VERSION" ]; then
-        shell="zsh"
-    elif [ -z "$BASH_VERSION" ]; then
-        shell="bash"
-    else
-        echo -e "${RED}Unsupported shell. You need either bash or zsh for this.${NC}"
-        exit 1
-    fi
-    echo "Detected shell: $shell"
-}
-ensure_repo_staged() {
-    if ! grep -q "PATH_DEV_ENV" ~/."$shell"rc; then
-        DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
-        PATH_DEV_ENV="$DEV_ENV_PATH"
-        echo "export PATH_DEV_ENV=\"$DEV_ENV_PATH\"" >>~/."$shell"rc
-    else
-        echo "PATH_DEV_ENV already set in your rc file."
-    fi
-    cd $PATH_DEV_ENV
-    check_for_updates
-}
-check_for_changes() {
-    if [ "$PERMS_DEV_ENV" == "full" ]; then
-        if git status | grep -q "nothing to commit"; then
-            echo "No changes, proceeding with update..."
-        else
-            echo -e "${YELLOW}There are changes to your configs, would you like to commit/push these changes to vc? (Y/n)${NC}"
-            read resp
-            if [[ ! $resp =~ ^[Yy]$ ]]; then
-                echo -e "${YELLOW}Skipping commit/push of changes.${NC}"
-            else
-                git add .
-                git commit -m "New updates to configs" 2>/dev/null
-                git push 2>/dev/null
-            fi
-        fi
-    fi
-}
-renew_nvim_config() {
-    if [ -d ~/.config/nvim ]; then
-        rm -rf ~/.config/nvim
-    fi
-    mkdir -p ~/.config
-    cp -r "$PATH_DEV_ENV/config/nvim" ~/.config/
-    echo -e "${GREEN}nvim config renewed.${NC}"
-    # Set up Omarchy hook for theme syncing
-    HOOKS_DIR="$HOME/.config/omarchy/hooks"
-    if [ -d "$HOOKS_DIR" ]; then
-        if [ ! -f "$HOOKS_DIR/theme-set" ]; then
-            echo "Creating theme-set hook for Omarchy..."
-            cp "$HOOKS_DIR/theme-set.sample" "$HOOKS_DIR/theme-set"
-            sudo echo "ln -sf \"\$HOME/.config/omarchy/current/theme/neovim.lua\" \"\$HOME/.config/nvim/lua/plugins/theme.lua\"" >>"$HOOKS_DIR/theme-set"
-            echo -e "${GREEN}Omarchy theme-set hook created for nvim.${NC}"
-        fi
-    fi
 
-}
-renew_configs() {
-    renew_nvim_config
-}
-update_configs() {
-    detect_shell
-    ensure_repo_staged
-    check_for_changes
-    renew_configs
-}
-add_alias() {
-    detect_shell
-    read -p "Enter alias name: " alias_name
-    read -p "Enter command for alias '$alias_name': " alias_command
-    echo "alias $alias_name='$alias_command'" >>"$HOME/.$(echo $shell)rc"
-    echo "Alias '$alias_name' added to $HOME/.$(echo $shell)rc"
-}
-add_path() {
-    detect_shell
-    read -p "Enter the path to add to PATH: " new_path
-    echo "export PATH=\"\$PATH:$new_path\"" >>"$HOME/.$(echo $shell)rc"
-    echo "Path '$new_path' added to PATH in $HOME/.$(echo $shell)rc"
-}
-add_custom_line() {
-    detect_shell
-    echo "Make sure this is valid bash, it is just being appended to your rc file."
-    read -p "Enter the custom line to add to your shell configuration: " custom_line
-    echo "$custom_line" >>"$HOME/.$(echo $shell)rc"
-    echo "Custom line added to $HOME/.$(echo $shell)rc"
-}
-edit_configs() {
-    detect_shell
-    ensure_repo_staged
-    if [ -z "$EDITOR" ]; then
-        EDITOR="vim"
-    else
-        $EDITOR "$PATH_DEV_ENV/config"
-    fi
-}
 show_help() {
     echo "Usage: $0 command"
     echo "Commands:"
@@ -121,8 +12,9 @@ show_help() {
     echo "  help      Show this help message. CAN ALSO BE USED AS: '[command] help' for more info on a specific command"
     echo "  add       choose what to add to env (alias, PATH, custom line to .bashrc)"
 }
+
 if [ -z "$1" ] || [ "$1" == "update" ]; then
-    update_configs
+    source "$PATH_DEV_ENV/scripts/dev-env-update-configs"
     exit 0
 elif [ -z "$2" ]; then
     if [ "$1" == "help" ]; then
@@ -150,7 +42,7 @@ elif [ -z "$2" ]; then
         done
         exit 0
     elif [ "$1" == "edit" ]; then
-        edit_configs
+        source "$PATH_DEV_ENV/scripts/dev-env-edit-configs"
         exit 0
     fi
 elif [ -z "$3" ]; then
@@ -182,13 +74,13 @@ elif [ -z "$3" ]; then
             echo "  custom - Add a custom line to your shell configuration"
             exit 0
         elif [ "$2" == "alias" ]; then
-            add_alias
+            source "$PATH_DEV_ENV/scripts/dev-env-add-alias"
             exit 0
         elif [ "$2" == "path" ]; then
-            add_path
+            source "$PATH_DEV_ENV/scripts/dev-env-add-path"
             exit 0
         elif [ "$2" == "custom" ]; then
-            add_custom_line
+            source "$PATH_DEV_ENV/scripts/dev-env-add-custom-line"
             exit 0
         fi
     elif [ "$1" == "edit" ]; then
@@ -198,5 +90,6 @@ elif [ -z "$3" ]; then
         fi
     fi
 fi
+
 show_help
 exit 1

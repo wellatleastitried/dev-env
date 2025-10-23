@@ -1,0 +1,42 @@
+#!/bin/bash
+
+source "$PATH_DEV_ENV/scripts/dev-env-detect-shell"
+
+if ! grep -q "PATH_DEV_ENV" ~/."$shell"rc; then
+    DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+    PATH_DEV_ENV="$DEV_ENV_PATH"
+    echo "export PATH_DEV_ENV=\"$DEV_ENV_PATH\"" >>~/."$shell"rc
+else
+    echo "PATH_DEV_ENV already set in your rc file."
+fi
+
+cd $PATH_DEV_ENV
+
+echo "Checking for updates..."
+if git fetch --dry-run 2>/dev/null; then
+    if [ "$(git rev-parse HEAD)" != "$(git rev-parse @{u})" ]; then
+        echo "Updates available. Pulling latest changes..."
+        git pull
+    else
+        echo "No updates available."
+    fi
+else
+    echo "${RED}Error checking for updates. Ensure you are in a git repository.${NC}"
+    exit 1
+fi
+
+if [ "$PERMS_DEV_ENV" == "full" ]; then
+    if git status | grep -q "nothing to commit"; then
+        echo "No changes, proceeding with update..."
+    else
+        echo -e "${YELLOW}There are changes to your configs, would you like to commit/push these changes to vc? (Y/n)${NC}"
+        read resp
+        if [[ ! $resp =~ ^[Yy]$ ]]; then
+            echo -e "${YELLOW}Skipping commit/push of changes.${NC}"
+        else
+            git add .
+            git commit -m "New updates to configs" 2>/dev/null
+            git push 2>/dev/null
+        fi
+    fi
+fi
