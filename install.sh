@@ -61,7 +61,7 @@ install_xnote() {
 ensure_repo_staged() {
     if ! grep -q "PATH_DEV_ENV" $HOME/."$shell"rc; then
         DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
-        echo "export PATH_DEV_ENV=$DEV_ENV_PATH" >>$HOME/."$shell"rc
+        echo "export PATH_DEV_ENV=\"$DEV_ENV_PATH\"" >>$HOME/."$shell"rc
         echo "export PATH=$PATH:$DEV_ENV_PATH" >>$HOME/."$shell"rc
     fi
 }

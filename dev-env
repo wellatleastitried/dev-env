@@ -14,10 +14,10 @@ detect_shell() {
 }
 
 ensure_repo_staged() {
-    DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
-    PATH_DEV_ENV=$DEV_ENV_PATH
     if ! grep -q "PATH_DEV_ENV" ~/."$shell"rc; then
-        echo "export PATH_DEV_ENV=$DEV_ENV_PATH" >>~/."$shell"rc
+        DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+        PATH_DEV_ENV="$DEV_ENV_PATH"
+        echo "export PATH_DEV_ENV=\"$DEV_ENV_PATH\"" >>~/."$shell"rc
     else
         echo "PATH_DEV_ENV already set in your rc file."
     fi
