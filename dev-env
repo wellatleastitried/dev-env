@@ -26,7 +26,6 @@ detect_shell() {
     echo "Detected shell: $shell"
 }
 ensure_repo_staged() {
-    check_for_updates
     if ! grep -q "PATH_DEV_ENV" ~/."$shell"rc; then
         DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
         PATH_DEV_ENV="$DEV_ENV_PATH"
@@ -35,9 +34,9 @@ ensure_repo_staged() {
         echo "PATH_DEV_ENV already set in your rc file."
     fi
     cd $PATH_DEV_ENV
+    check_for_updates
 }
 check_for_changes() {
-    echo "$PERMS_DEV_ENV"
     if [ "$PERMS_DEV_ENV" == "full" ]; then
         if git status | grep -q "nothing to commit"; then
             echo "No changes, proceeding with update..."
