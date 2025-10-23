@@ -51,8 +51,8 @@ check_for_changes() {
                 echo "Skipping commit/push of changes."
             else
                 git add .
-                git commit -m "New updates to configs"
-                git push
+                git commit -m "New updates to configs" 2>/dev/null
+                git push 2>/dev/null
             fi
         fi
     fi
