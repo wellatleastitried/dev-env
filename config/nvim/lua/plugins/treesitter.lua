@@ -15,6 +15,7 @@ return {
 				"lua",
 				"query",
 				"markdown",
+				"zig",
 			},
 			sync_install = false,
 			auto_install = true,
