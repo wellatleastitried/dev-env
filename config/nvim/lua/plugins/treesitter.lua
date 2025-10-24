@@ -13,13 +13,8 @@ return {
 				"bash",
 				"c",
 				"lua",
-				"vim",
-				"vimdoc",
 				"query",
 				"markdown",
-				"markdown_inline",
-				"zig",
-				"go",
 			},
 			sync_install = false,
 			auto_install = true,
@@ -30,4 +25,3 @@ return {
 		},
 	},
 }
-
