@@ -19,4 +19,37 @@ renew_nvim_config() {
     fi
 }
 
+renew_hypr_config() {
+    local HYPR_DIR="$HOME/.config/hypr"
+
+    if [ ! -d "$HYPR_DIR" "]; then
+        return
+    fi
+
+    local CURR_DIR="$(pwd)"
+    local LEFT_BIND_HYPR="bindd = SUPER, H, .*, l"
+    local RIGHT_BIND_HYPR="bindd = SUPER, L, .*, r"
+    local UP_BIND_HYPR="bindd = SUPER, K, .*, u"
+    local DOWN_BIND_HYPR="bindd = SUPER, J, .*, d"
+
+    cd "$HYPR_DIR"
+    if ! rg "$LEFT_BIND_HYPR"; then
+        echo "$LEFT_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
+    fi
+
+    if ! rg "$RIGHT_BIND_HYPR"; then
+        echo "$RIGHT_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
+    fi
+
+    if ! rg "$UP_BIND_HYPR"; then
+        echo "$UP_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
+    fi
+
+    if ! rg "$DOWN_BIND_HYPR"; then
+        echo "$DOWN_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
+    fi
+    cd "$CURR_DIR"
+}
+
 renew_nvim_config
+renew_hypr_config
