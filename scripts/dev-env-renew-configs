@@ -34,23 +34,24 @@ renew_hypr_config() {
 
     cd "$HYPR_DIR"
 
-    if ! rg "$LEFT_BIND_HYPR"; then
+    if ! rg "$LEFT_BIND_HYPR" 2>/dev/null; then
         echo "$LEFT_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
     fi
 
-    if ! rg "$RIGHT_BIND_HYPR"; then
+    if ! rg "$RIGHT_BIND_HYPR" 2>/dev/null; then
         echo "$RIGHT_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
     fi
 
-    if ! rg "$UP_BIND_HYPR"; then
+    if ! rg "$UP_BIND_HYPR" 2>/devnull; then
         echo "$UP_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
     fi
 
-    if ! rg "$DOWN_BIND_HYPR"; then
+    if ! rg "$DOWN_BIND_HYPR" 2>/dev/null; then
         echo "$DOWN_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
     fi
 
     cd "$CURR_DIR"
+    echo -e "${GREEN}hypr config renewed.${NC}"
 }
 
 renew_nvim_config
