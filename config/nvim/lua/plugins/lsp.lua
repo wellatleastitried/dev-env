@@ -19,6 +19,9 @@ return {
 		opts = {
 			ensure_installed = {
 				"lua-language-server",
+				"zls",
+				"bash-language-server",
+				"pyright",
 			},
 			autoformat = false,
 		},
