@@ -2,7 +2,7 @@
 
 source "$PATH_DEV_ENV/scripts/dev-env-detect-shell"
 
-eval $(ssh-agent -s)
+eval $(ssh-agent -s) > /dev/null 2>&1
 trap 'kill $SSH_AGENT_PID' EXIT
 trap 'kill $SSH_AGENT_PID' INT
 trap 'kill $SSH_AGENT_PID' TERM
@@ -12,7 +12,7 @@ if [ ! -f ~/.ssh/id_ed25519 ]; then
     echo -e "${RED}SSH key not found at ~/.ssh/id_ed25519. Expecting SSH key for git authentication, skipping git interop.${NC}"
     return
 else
-    ssh-add ~/.ssh/id_ed25519
+    ssh-add ~/.ssh/id_ed25519 2>/dev/null
     echo -e "${GREEN}SSH key staged successfully.${NC}"
 fi
 
