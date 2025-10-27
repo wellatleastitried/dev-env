@@ -1,24 +1,20 @@
-print("FUCKING CMP LOAD")
+print("Fuck blink.cmp defaults")
 
 return {
 	{
-		"hrsh7th/nvim-cmp",
-		opts = function(_, opts)
-			local cmp = require("cmp")
-
-			opts.experimental = {
-				ghost_text = false,
-			}
-
-			opts.mapping = vim.cmp.mapping.preset.insert({
-				["<CR>"] = function(fallback)
-					fallback()
-				end,
-				["<C-y>"] = cmp.mapping.confirm({ select = true }),
-				["<Tab>"] = cmp.mapping(function(fallback)
-					fallback()
-				end),
-			})
-		end,
+		"saghen/blink.cmp",
+		opts = {
+			completion = {
+				ghost_text = {
+					enabled = false,
+				},
+			},
+			keymap = {
+				preset = "default",
+				["<CR>"] = {}, -- Disable the worst default keybind in existence
+				["<C-y>"] = { "accept", "fallback" },
+				["<Tab>"] = { "fallback" },
+			},
+		},
 	},
 }
