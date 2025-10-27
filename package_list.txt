@@ -1,5 +1,6 @@
-nvim
+neovim
 rg
 tor
+torsocks
 gajim
 weechat
