@@ -1,3 +1,5 @@
+print("FUCKING CMP LOAD")
+
 return {
 	{
 		"hrsh7th/nvim-cmp",
