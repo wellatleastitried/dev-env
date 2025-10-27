@@ -3,6 +3,5 @@ return {
 	ops = function(_, opts)
 		local cmp = require("cmp")
 		cmp.mapping["<CR>"] = nil
-		enabled = false
 	end,
 }
