@@ -7,9 +7,12 @@ NC='\033[0m'
 
 teach_em() {
     echo -e "${YELLOW}No argument provided, you need to either pass:${NC}"
-    echo -e "${YELLOW}  - 'user' to install the project for non-owners of the repo${NC}"
-    echo -e "${YELLOW}  - 'full' to install the project for owners of the repo${NC}"
-    echo -e "${RED}If you lie about this, the dev-env script WILL NOT work correctly.${NC}"
+    echo -e "${YELLOW}  - 'inherit' to install the project for non-owners of the repo that to use this for their own configs${NC}"
+    echo -e "${YELLOW}      You MUST have your own fork of this repo before running this or else it will not work, just an fyi${NC}"
+    echo -e "${YELLOW}  - 'user' to install the project for non-owners of the repo that want my configs${NC}"
+    echo -e "${YELLOW}      This option is for people that want to use my configs and be along for the ride${NC}"
+    echo -e "${RED}  - 'owner' to install the project for owners of the repo${NC}"
+    echo -e "${RED}      This option is for me, you can run it if you want but the dev-env script will yell at you during the update portion of the script${NC}"
     exit 1
 }
 
@@ -18,7 +21,7 @@ if [ -z "$1" ]; then
 fi
 
 set_access() {
-    if [ "$1" != "user" ] && [ "$1" != "full" ]; then
+    if [ "$1" != "user" ] && [ "$1" != "owner" ] && [ "$1" != "inherit" ]; then
         teach_em
     fi
     echo "Saving access perms: $1"
@@ -102,4 +105,5 @@ ensure_repo_staged
 install_packages
 ensure_tools_installed
 
+echo -e "${RED}NOTICE${NC}"
 echo "When modifying your configs, do it in this repos config folder using 'dev-env edit'. It will make deploying/saving the configuration simpler."

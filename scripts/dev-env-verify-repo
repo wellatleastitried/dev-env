@@ -2,6 +2,21 @@
 
 source "$PATH_DEV_ENV/scripts/dev-env-detect-shell"
 
+eval $(ssh-agent -s)
+trap 'kill $SSH_AGENT_PID' EXIT
+trap 'kill $SSH_AGENT_PID' INT
+trap 'kill $SSH_AGENT_PID' TERM
+
+echo "Staging ssh key for git operations..."
+if [ ! -f ~/.ssh/id_ed25519 ]; then
+    echo -e "${RED}SSH key not found at ~/.ssh/id_ed25519. Expecting SSH key for git authentication, skipping git interop.${NC}"
+    return
+else
+    ssh-add ~/.ssh/id_ed25519
+    echo -e "${GREEN}SSH key staged successfully.${NC}"
+fi
+
+
 if ! grep -q "PATH_DEV_ENV" ~/."$shell"rc; then
     DEV_ENV_PATH="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
     PATH_DEV_ENV="$DEV_ENV_PATH"
@@ -13,19 +28,19 @@ fi
 cd $PATH_DEV_ENV
 
 echo "Checking for updates..."
-if git fetch --dry-run 2>/dev/null; then
-    if [ "$(git rev-parse HEAD)" != "$(git rev-parse @{u})" ]; then
-        echo "Updates available. Pulling latest changes..."
-        git pull
-    else
-        echo "No updates available."
-    fi
+git fetch origin
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+commits_behind=$(git rev-list --count HEAD..origin/$current_branch)
+if [ "$commits_behind" -gt 0 ]; then
+    echo "Updates available. Pulling latest changes..."
+    git pull
 else
-    echo "${RED}Error checking for updates. Ensure you are in a git repository.${NC}"
-    exit 1
+    echo "No updates available."
 fi
 
-if [ "$PERMS_DEV_ENV" == "full" ]; then
+echo "$PERMS_DEV_ENV"
+
+if [ "$PERMS_DEV_ENV" == "owner" ] || [ "$PERMS_DEV_ENV" == "inherit" ]; then
     if git status | grep -q "nothing to commit"; then
         echo "No changes, proceeding with update..."
     else
