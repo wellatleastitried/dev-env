@@ -27,27 +27,33 @@ renew_hypr_config() {
     fi
 
     local CURR_DIR="$(pwd)"
-    local LEFT_BIND_HYPR="bindd = SUPER, H, .*, l"
-    local RIGHT_BIND_HYPR="bindd = SUPER, L, .*, r"
-    local UP_BIND_HYPR="bindd = SUPER, K, .*, u"
-    local DOWN_BIND_HYPR="bindd = SUPER, J, .*, d"
+
+    local LEFT_BIND_HYPR_SEARCH="bindd = SUPER, H, .*, l"
+    local RIGHT_BIND_HYPR_SEARCH="bindd = SUPER, L, .*, r"
+    local UP_BIND_HYPR_SEARCH="bindd = SUPER, K, .*, u"
+    local DOWN_BIND_HYPR_SEARCH="bindd = SUPER, J, .*, d"
+
+    local LEFT_BIND_HYPR_LINE="bindd = SUPER, H, Move focus left, l"
+    local RIGHT_BIND_HYPR_LINE="bindd = SUPER, L, Move focus right, r"
+    local UP_BIND_HYPR_LINE="bindd = SUPER, K, Move focus up, u"
+    local DOWN_BIND_HYPR_LINE="bindd = SUPER, J, Move focus down, d"
 
     cd "$HYPR_DIR"
 
-    if ! rg "$LEFT_BIND_HYPR" >/dev/null; then
-        echo "$LEFT_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
+    if ! rg "$LEFT_BIND_HYPR_SEARCH" >/dev/null; then
+        echo "$LEFT_BIND_HYPR_LINE" >> "$HYPR_DIR/hyprland.conf"
     fi
 
-    if ! rg "$RIGHT_BIND_HYPR" >/dev/null; then
-        echo "$RIGHT_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
+    if ! rg "$RIGHT_BIND_HYPR_SEARCH" >/dev/null; then
+        echo "$RIGHT_BIND_HYPR_LINE" >> "$HYPR_DIR/hyprland.conf"
     fi
 
-    if ! rg "$UP_BIND_HYPR" >/dev/null; then
-        echo "$UP_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
+    if ! rg "$UP_BIND_HYPR_SEARCH" >/dev/null; then
+        echo "$UP_BIND_HYPR_LINE" >> "$HYPR_DIR/hyprland.conf"
     fi
 
-    if ! rg "$DOWN_BIND_HYPR" >/dev/null; then
-        echo "$DOWN_BIND_HYPR" >> "$HYPR_DIR/hyprland.conf"
+    if ! rg "$DOWN_BIND_HYPR_SEARCH" >/dev/null; then
+        echo "$DOWN_BIND_HYPR_LINE" >> "$HYPR_DIR/hyprland.conf"
     fi
 
     cd "$CURR_DIR"

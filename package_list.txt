@@ -1,2 +1,5 @@
 nvim
 rg
+tor
+gajim
+weechat
