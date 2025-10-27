@@ -4,7 +4,7 @@ return {
 		local cmp = require("cmp")
 		cmp.setup({
 			completion = {
-				autocomplete = false,
+				enabled = false,
 			},
 		})
 	end,
