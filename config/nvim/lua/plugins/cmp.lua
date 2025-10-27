@@ -2,6 +2,6 @@ return {
 	"hrsh7th/nvim-cmp",
 	ops = function(_, opts)
 		local cmp = require("cmp")
-		cmp.mapping["<CR>"] = nil
+		["C-Space-CR>"] = cmp.mapping.confirm({ select = auto_select }),
 	end,
 }
