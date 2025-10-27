@@ -2,8 +2,8 @@ return {
 	"hrsh7th/nvim-cmp",
 	ops = function()
 		local cmp = require("cmp")
-		enabled = false
 		return {
+			enabled = false,
 			mapping = cmp.mapping.preset.insert({
 				["<C-Space>"] = cmp.mapping.complete(),
 				["<C-CR>"] = cmp.mapping.abort(),
