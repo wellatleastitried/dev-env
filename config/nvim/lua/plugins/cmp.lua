@@ -1,6 +1,6 @@
 return {
 	"hrsh7th/nvim-cmp",
-	ops = function(_, opts)
+	opts = function(_, opts)
 		local cmp = require("cmp")
 
 		opts.mapping = vim.tbl_deep_extend("force", opts.mapping, {
