@@ -10,10 +10,10 @@ if [ "$PERMS_DEV_ENV" == "owner" ]; then
 
     echo "Staging ssh key for git operations..."
     if [ -f ~/.ssh/id_ed25519 ]; then
-        echo -e "${GREEN}Found ssh key for git authentication.${NC}"
+        echo -e "${GREEN}Found SSH key for git authentication.${NC}"
         key_path="$HOME/.ssh/id_ed25519"
     elif [ -f ~/.ssh/id_rsa ]; then
-        echo -e "${GREEN}Found ssh key for git authentication.${NC}"
+        echo -e "${GREEN}Found SSH key for git authentication.${NC}"
         key_path="$HOME/.ssh/id_rsa"
     fi
 
