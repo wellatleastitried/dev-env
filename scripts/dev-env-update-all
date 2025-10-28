@@ -1,3 +1,5 @@
 #!/bin/bash
 
-source $PATH_DEV_ENV/scripts/dev-env-renew-*
+for script in $PATH_DEV_ENV/scripts/dev-env-renew-*; do
+    [ -f "$script" ] && source "$script"
+done
