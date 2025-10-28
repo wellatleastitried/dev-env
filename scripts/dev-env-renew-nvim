@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo "Renewing nvim config..."
+
+if [ -d ~/.config/nvim ]; then
+    rm -rf ~/.config/nvim
+fi
+mkdir -p ~/.config
+cp -r "$PATH_DEV_ENV/config/nvim" ~/.config/
+echo -e "${GREEN}nvim config renewed.${NC}"
+
+# Set up Omarchy hook for theme syncing
+HOOKS_DIR="$HOME/.config/omarchy/hooks"
+if [ -d "$HOOKS_DIR" ]; then
+    if [ ! -f "$HOOKS_DIR/theme-set" ]; then
+        echo "Creating theme-set hook for Omarchy..."
+        cp "$HOOKS_DIR/theme-set.sample" "$HOOKS_DIR/theme-set"
+        sudo echo "ln -sf \"\$HOME/.config/omarchy/current/theme/neovim.lua\" \"\$HOME/.config/nvim/lua/plugins/theme.lua\"" >>"$HOOKS_DIR/theme-set"
+        echo -e "${GREEN}Omarchy theme-set hook created for nvim.${NC}"
+    fi
+fi

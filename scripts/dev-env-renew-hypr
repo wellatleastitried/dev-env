@@ -1,0 +1,43 @@
+#!/bin/bash
+
+echo "Renewing hypr config..."
+
+HYPR_DIR="$HOME/.config/hypr"
+
+if [ ! -d "$HYPR_DIR" ]; then
+    echo -e "${YELLOW}Hyprland is not used in this system. Skipping hypr config renewal.${NC}"
+    return
+fi
+
+CURR_WORKING_DIR="$(pwd)"
+
+LEFT_BIND_HYPR_SEARCH="bindd = SUPER, H, .*, l"
+RIGHT_BIND_HYPR_SEARCH="bindd = SUPER, L, .*, r"
+UP_BIND_HYPR_SEARCH="bindd = SUPER, K, .*, u"
+DOWN_BIND_HYPR_SEARCH="bindd = SUPER, J, .*, d"
+
+LEFT_BIND_HYPR_LINE="bindd = SUPER, H, Move focus left, l"
+RIGHT_BIND_HYPR_LINE="bindd = SUPER, L, Move focus right, r"
+UP_BIND_HYPR_LINE="bindd = SUPER, K, Move focus up, u"
+DOWN_BIND_HYPR_LINE="bindd = SUPER, J, Move focus down, d"
+
+cd "$HYPR_DIR"
+
+if ! rg "$LEFT_BIND_HYPR_SEARCH" >/dev/null; then
+    echo "$LEFT_BIND_HYPR_LINE" >>"$HYPR_DIR/hyprland.conf"
+fi
+
+if ! rg "$RIGHT_BIND_HYPR_SEARCH" >/dev/null; then
+    echo "$RIGHT_BIND_HYPR_LINE" >>"$HYPR_DIR/hyprland.conf"
+fi
+
+if ! rg "$UP_BIND_HYPR_SEARCH" >/dev/null; then
+    echo "$UP_BIND_HYPR_LINE" >>"$HYPR_DIR/hyprland.conf"
+fi
+
+if ! rg "$DOWN_BIND_HYPR_SEARCH" >/dev/null; then
+    echo "$DOWN_BIND_HYPR_LINE" >>"$HYPR_DIR/hyprland.conf"
+fi
+
+cd "$CURR_WORKING_DIR"
+echo -e "${GREEN}hypr config renewed.${NC}"

@@ -44,13 +44,6 @@ detect_shell() {
 }
 
 install_package() {
-    PACKAGE_NAME=$1
-    if ! command -v $PACKAGE_NAME; then
-        echo "$PACKAGE_NAME not installed: installing $PACKAGE_NAME"
-    else
-        echo "$PACKAGE_NAME is already installed."
-        return
-    fi
     if command -v apt-get; then
         sudo apt-get update
         sudo apt-get install -y $PACKAGE_NAME
