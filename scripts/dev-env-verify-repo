@@ -55,9 +55,9 @@ if [ "$PERMS_DEV_ENV" == "owner" ]; then
             echo -e "${YELLOW}Skipping commit/push of changes.${NC}"
         else
             echo -e "Committing and pushing changes..."
-            git add .
-            git commit -m "New updates to configs"
-            git push
+            git add . &>/dev/null
+            git commit -m "New updates to configs" &>/dev/null
+            git push &>/dev/null
             echo -e "${GREEN}Changes pushed successfully.${NC}"
         fi
     fi
