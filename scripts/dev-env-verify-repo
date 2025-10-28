@@ -9,16 +9,20 @@ if [ "$PERMS_DEV_ENV" == "owner" ]; then
     trap 'kill $SSH_AGENT_PID' TERM
 
     echo "Staging ssh key for git operations..."
-    if [ ! -f ~/.ssh/id_ed25519 ]; then
-        echo -e "${RED}SSH key not found at ~/.ssh/id_ed25519. Expecting SSH key for git authentication, checking another location...${NC}"
-        local key_path="$HOME/.ssh/id_ed25519"
-    elif [ ! -f ~/.ssh/id_rsa ]; then
-        echo -e "${RED}RSA SSH key not found at ~/.ssh/id_rsa. Expecting RSA SSH key for git authentication, skipping git interop.${NC}"
-        return
-    else
-        local key_path="$HOME/.ssh/id_rsa"
+    if [ -f ~/.ssh/id_ed25519 ]; then
+        echo -e "${GREEN}Found ssh key for git authentication.${NC}"
+        key_path="$HOME/.ssh/id_ed25519"
+    elif [ -f ~/.ssh/id_rsa ]; then
+        echo -e "${GREEN}Found ssh key for git authentication.${NC}"
+        key_path="$HOME/.ssh/id_rsa"
+    fi
+
+    if [ -n "$key_path" ]; then
         ssh-add "$key_path" 2>/dev/null
         echo -e "${GREEN}SSH key staged successfully.${NC}"
+    else
+        echo -e "${RED}SSH key for git authentication not found. Skipping git interop.${NC}"
+        return
     fi
 
     if ! grep -q "PATH_DEV_ENV" ~/."$shell"rc; then
