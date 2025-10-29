@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source "$PATH_DEV_ENV/scripts/dev-env-detect-shell"
 source "$PATH_DEV_ENV/scripts/dev-env-verify-repo"
 if [ -z "$EDITOR" ]; then
     EDITOR="vim"
