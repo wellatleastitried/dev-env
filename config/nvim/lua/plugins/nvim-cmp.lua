@@ -1,4 +1,4 @@
-print("Fuck blink.cmp defaults")
+print("Fuck blink.cmp")
 
 return {
 	{
