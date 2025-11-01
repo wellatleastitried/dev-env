@@ -58,7 +58,7 @@ install_package() {
 install_packages() {
     PACKAGE_FILE=./package_list.txt
     if [ ! -f $PACKAGE_FILE ]; then
-        echo "Package list file not found, what the fuck just happened."
+        echo "Package list file not found."
         exit 1
     else
         for package in $(cat $PACKAGE_FILE); do
