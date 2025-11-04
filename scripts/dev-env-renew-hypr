@@ -22,7 +22,7 @@ LEFT_BIND_HYPR_LINE="bindd = SUPER, H, Move focus left, l"
 RIGHT_BIND_HYPR_LINE="bindd = SUPER, L, Move focus right, r"
 UP_BIND_HYPR_LINE="bindd = SUPER, K, Move focus up, u"
 DOWN_BIND_HYPR_LINE="bindd = SUPER, J, Move focus down, d"
-VOLUME_UP_BIND_HYPR_LINE="bindd = , XF86AudioRaiseVolume, exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+, d, Volume Up"
+VOLUME_UP_BIND_HYPR_LINE="bindd = , XF86AudioRaiseVolume, Volume Up, exec, wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"
 VOLUME_DOWN_BIND_HYPR_LINE="bindd = , XF86AudioLowerVolume, exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-, d, Volume Down"
 
 cd "$HYPR_DIR"
