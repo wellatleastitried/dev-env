@@ -15,6 +15,11 @@ LEFT_BIND_HYPR_SEARCH="bindd = SUPER, H, .*, l"
 RIGHT_BIND_HYPR_SEARCH="bindd = SUPER, L, .*, r"
 UP_BIND_HYPR_SEARCH="bindd = SUPER, K, .*, u"
 DOWN_BIND_HYPR_SEARCH="bindd = SUPER, J, .*, d"
+VOLUME_UP_BIND_HYPR_SEARCH="XF86AudioRaiseVolume"
+VOLUME_DOWN_BIND_HYPR_SEARCH="XF86AudioLowerVolume"
+
+VOLUME_UP_BIND_HYPR_LINE="bindd = , XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"
+VOLUME_DOWN_BIND_HYPR_LINE="bindd = , XF86AudioLowerVolume, exec, wpctl set-volume -l 0.0 @DEFAULT_AUDIO_SINK@ 5%-"
 
 LEFT_BIND_HYPR_LINE="bindd = SUPER, H, Move focus left, l"
 RIGHT_BIND_HYPR_LINE="bindd = SUPER, L, Move focus right, r"
@@ -37,6 +42,14 @@ fi
 
 if ! rg "$DOWN_BIND_HYPR_SEARCH" >/dev/null; then
     echo "$DOWN_BIND_HYPR_LINE" >>"$HYPR_DIR/hyprland.conf"
+fi
+
+if ! rg "$VOLUME_UP_BIND_HYPR_SEARCH" >/dev/null; then
+    echo "$VOLUME_UP_BIND_HYPR_LINE" >>"$HYPR_DIR/hyprland.conf"
+fi
+
+if ! rg "$VOLUME_DOWN_BIND_HYPR_SEARCH" >/dev/null; then
+    echo "$VOLUME_DOWN_BIND_HYPR_LINE" >>"$HYPR_DIR/hyprland.conf"
 fi
 
 cd "$CURR_WORKING_DIR"
