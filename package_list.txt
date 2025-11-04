@@ -4,3 +4,5 @@ tor
 torsocks
 gajim
 weechat
+pipewire-pulse
+pipewire-alsa
