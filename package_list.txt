@@ -4,5 +4,6 @@ tor
 torsocks
 gajim
 weechat
+tmux
 pipewire-pulse
 pipewire-alsa
