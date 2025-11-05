@@ -1,6 +1,5 @@
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "Open file explorer" })
 vim.keymap.set("n", "<leader>cc", '"+yy', { desc = "Copy line to system clipboard" })
-vim.keymap.del("v", "<leader>cc")
 vim.keymap.set("v", "<leader>cc", '"+y', { desc = "Copy selection to system clipboard" })
 vim.keymap.set("n", "<leader>pc", '"*p', { desc = "Paste from system clipboard" })
 
