@@ -43,12 +43,24 @@ detect_shell() {
     echo "Detected shell: $shell"
 }
 
-install_package() {
+update_existing_packages() {
     if command -v apt-get; then
         sudo apt-get update
-        sudo apt-get install -y $PACKAGE_NAME
+        sudo apt-get upgrade
     elif command -v pacman; then
-        sudo pacman -Syu $PACKAGE_NAME
+        sudo pacman -Syu
+    else
+        echo "No supported package manager found. It is recommended to update your packages before installing new ones."
+        exit 1
+    fi
+}
+
+install_package() {
+    PACKAGE_NAME=$1
+    if command -v apt-get; then
+        sudo apt-get install -y "$PACKAGE_NAME" && echo -e "${GREEN}Installed $PACKAGE_NAME.${NC}" || echo -e "${RED}Error installing $PACKAGE_NAME!${NC}"
+    elif command -v pacman; then
+        yes | sudo pacman -S "$PACKAGE_NAME" && echo -e "${GREEN}Installed $PACKAGE_NAME.${NC}" || echo -e "${RED}Error installing $PACKAGE_NAME!${NC}"
     else
         echo "No supported package manager found. Install $PACKAGE_NAME manually."
         exit 1
@@ -56,12 +68,14 @@ install_package() {
 }
 
 install_packages() {
+    update_existing_packages
     PACKAGE_FILE=./package_list.txt
     if [ ! -f $PACKAGE_FILE ]; then
         echo "Package list file not found."
         exit 1
     else
         for package in $(cat $PACKAGE_FILE); do
+            echo "Installing $package..."
             install_package $package
         done
     fi
@@ -69,7 +83,7 @@ install_packages() {
 
 ensure_tools_installed() {
     if ! which xnote; then
-        install-xnote
+        install_xnote
     fi
 }
 
@@ -77,8 +91,9 @@ install_xnote() {
     cd /tmp
     git clone https://github.com/wellatleastitried/xnote.git
     cd xnote
-    sudo install xnote
+    sudo install -m 755 ./xnote /usr/local/bin/xnote || echo "Installing xnote failed!"
     cd $DEV_ENV_PATH
+    rm -rf /tmp/xnote
 }
 
 ensure_repo_staged() {
