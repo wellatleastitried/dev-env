@@ -85,6 +85,9 @@ ensure_tools_installed() {
     if ! which xnote; then
         install_xnote
     fi
+    if ! which restart-dns; then
+        sudo install -m 755 $DEV_ENV_PATH/scripts/restart-dns /usr/local/bin/restart-dns
+    fi
 }
 
 install_xnote() {
