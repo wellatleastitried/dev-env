@@ -1,0 +1,11 @@
+#!/bin/bash
+
+build() {
+	add_runscript
+}
+
+help() {
+	cat <<HELPEOF
+This hook unlocks the second encrypted drive for multi-device btrfs. My second nvme drive needs to decrypt using a key that is stored in the first nvme drive.
+HELPEOF
+}

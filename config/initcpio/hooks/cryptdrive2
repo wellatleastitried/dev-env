@@ -1,0 +1,12 @@
+#!/usr/bin/ash
+
+run_hook() {
+	for dev in /dev/nvme*n1; do
+		# Skip the device if it has partitions (we only need to decrpyt the additional drive)
+		if [ ! -e "${dev}p1" ] || [ ! -e "${dev}p2" ]; then
+			msg "Found second encrytped drive: ${dev}"
+			/sbin/cryptsetup luksOpen --key-file /root/cryptdrive2.key "${dev}" cryptdrive2
+			break
+		fi
+	done
+}
