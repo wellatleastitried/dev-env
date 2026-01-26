@@ -107,12 +107,56 @@ ensure_repo_staged() {
     fi
 }
 
+survived_questionaire() {
+    echo -e "${YELLOW}Do you have a second nvme drive that has been added to your btrfs filesystem? (y/n)${NC}"
+    read -r response
+    echo -e "${YELLOW}Do you use limine as your bootloader? (y/n)${NC}"
+    read -r bootloader_response
+    echo -e "${YELLOW}Do you want to implement a custom kernel hook to automatically decrypt and mount the drive on boot? (y/n)${NC}"
+    read -r hook_response
+    return [[ "$response" == "y" && "$bootloader_response" == "y" && "$hook_response" == "y" ]]
+}
+
+implement_custom_kernel_hook() {
+    if survived_questionaire; then
+        echo "Implementing custom kernel hook..."
+        sudo cp "$DEV_ENV_PATH/config/initcpio/hooks/cryptdrive2" /etc/initcpio/hooks/
+        sudo cp "$DEV_ENV_PATH/config/initcpio/install/cryptdrive2" /etc/initcpio/install/
+        echo -e "${YELLOW}Do you use omarchy as your Arch Linux installation base? (y/n)${NC}"
+        read -r omarchy_response
+        if [[ "$omarchy_response" == "y" ]]; then
+            echo "Applying new hook to omarchy mkinitcpio config..."
+            sudo sed -i 's/encrypt/encrypt cryptdrive2/' /etc/mkinitcpio.conf.d/omarchy_hooks.conf
+            echo "Rebuilding initramfs with limine-mkinitcpio..."
+            sudo limine-mkinitcpio
+            echo -e "${GREEN}Custom kernel hook added!${NC}"
+        else
+            echo "Applying new hook to mkinitcpio config..."
+            if sudo cat /etc/mkinitcpio.conf | grep -iE '^HOOKS=' | grep -q 'systemd'; then
+                echo "Current hooks are systemd based - the custom hook is untested with systemd setups. If you would like to proceed anyway, please type 'yes' to confirm."
+                read -r confirm_systemd
+                if [[ "$confirm_systemd" != "yes" ]]; then
+                    echo "${RED}Aborting custom kernel hook implementation.${NC}"
+                    return
+                fi
+            fi
+            sudo sed -i 's/encrypt/encrypt cryptdrive2/' /etc/mkinitcpio.conf
+            echo "Rebuilding initramfs..."
+            sudo mkinitcpio -P
+            echo -e "${GREEN}Custom kernel hook added!${NC}"
+        fi
+    else
+        echo "Skipping custom kernel hook implementation."
+    fi
+}
+
 detect_shell
 set_access $1
 set_perms
 ensure_repo_staged
 install_packages
 ensure_tools_installed
+implement_custom_kernel_hook
 
 echo -e "${RED}NOTICE${NC}"
 echo "When modifying your configs, do it in this repos config folder using 'dev-env edit'. It will make deploying/saving the configuration simpler."
