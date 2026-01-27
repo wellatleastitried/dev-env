@@ -8,3 +8,4 @@ weechat
 tmux
 pipewire-pulse
 pipewire-alsa
+bat
