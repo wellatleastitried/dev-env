@@ -88,6 +88,7 @@ ensure_tools_installed() {
     if ! which restart-dns; then
         sudo install -m 755 $DEV_ENV_PATH/scripts/restart-dns /usr/local/bin/restart-dns
     fi
+    echo "alias cat=bat" >>$HOME/."$shell"rc
 }
 
 install_xnote() {
