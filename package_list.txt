@@ -9,3 +9,4 @@ tmux
 pipewire-pulse
 pipewire-alsa
 bat
+man-pages
