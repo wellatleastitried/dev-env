@@ -20,7 +20,7 @@ return {
                 desc = "Banner reminder to start the Nvlime server",
                 callback = function()
                     vim.notify(
-                        "Lisp file detected.\nPress <leader>rr to start the Nvlime server!",
+                        "Lisp file detected.\nPress \\rr to start the Nvlime server!",
                         vim.log.levels.INFO,
                         { title = "Nvlime Setup" }
                     )
