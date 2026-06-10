@@ -21,7 +21,9 @@ return {
 			highlight = {
 				enable = true,
 				additional_vim_regex_highlighting = true,
-            },
+			},
+        },
+        require('nvim-treesitter.configs').setup {
             rainbow = {
                 enable = true,
                 -- list of languages you want to disable the plugin for
@@ -31,6 +33,6 @@ return {
                 -- Highlight the entire buffer all at once
                 strategy = require('ts-rainbow').strategy.global,
             }
-        },
-    },
+        }
+	},
 }
