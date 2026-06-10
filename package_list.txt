@@ -10,3 +10,4 @@ pipewire-pulse
 pipewire-alsa
 bat
 man-pages
+sbcl
