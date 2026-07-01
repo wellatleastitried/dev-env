@@ -16,6 +16,7 @@ return {
                 "query",
                 "markdown",
                 "forth",
+                "asm",
             },
             sync_install = false,
             auto_install = true,
