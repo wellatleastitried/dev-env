@@ -20,3 +20,14 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufNew"}, {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "forth", "fth", "4th" },
+  callback = function()
+    vim.lsp.start({
+      name = "forth-lsp",
+      cmd = { "forth-lsp" },
+      root_dir = vim.fn.getcwd(),
+    })
+  end,
+})
