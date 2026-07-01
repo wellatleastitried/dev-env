@@ -5,15 +5,11 @@ return {
         opts = {
             ensure_installed = {
                 "javascript",
-                "typescript",
-                "ruby",
                 "python",
                 "java",
-                "perl",
                 "bash",
                 "c",
                 "lua",
-                "query",
                 "markdown",
                 "forth",
                 "asm",
