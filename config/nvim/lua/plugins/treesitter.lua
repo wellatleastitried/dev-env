@@ -15,6 +15,7 @@ return {
                 "lua",
                 "query",
                 "markdown",
+                "forth",
             },
             sync_install = false,
             auto_install = true,
