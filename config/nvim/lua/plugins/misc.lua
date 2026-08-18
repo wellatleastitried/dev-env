@@ -26,7 +26,6 @@ return {
                     )
                 end,
             })
-            vim.cmd('Copilot disable')
         end,
     },
 }
