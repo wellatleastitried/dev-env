@@ -2,6 +2,11 @@ return {
     {
         "github/copilot.vim",
         event = "VeryLazy",
+        vim.api.nvim_create_autocmd('VimEnter', {
+            callback = function()
+                vim.cmd('Copilot disable')
+            end,
+        })
     },
     {
         "tpope/vim-dispatch",
@@ -24,11 +29,6 @@ return {
                         vim.log.levels.INFO,
                         { title = "Nvlime Setup" }
                     )
-                end,
-            })
-            vim.api.nvim_create_autocmd('VimEnter', {
-                callback = function()
-                    vim.cmd('Copilot disable')
                 end,
             })
         end,
