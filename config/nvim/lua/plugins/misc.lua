@@ -2,11 +2,9 @@ return {
     {
         "github/copilot.vim",
         event = "VeryLazy",
-        vim.api.nvim_create_autocmd('VimEnter', {
-            callback = function()
-                vim.cmd('Copilot disable')
-            end,
-        })
+        config = function()
+            vim.g.copilot_enabled = false
+        end,
     },
     {
         "tpope/vim-dispatch",
