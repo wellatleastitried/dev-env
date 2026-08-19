@@ -27,4 +27,5 @@ if ! rg -F "$REQUIRE_LINE" "$HYPR_CONF" >/dev/null; then
 fi
 
 cd "$CURR_WORKING_DIR"
+hyprctl reload
 echo -e "${GREEN}hypr config renewed.${NC}"
