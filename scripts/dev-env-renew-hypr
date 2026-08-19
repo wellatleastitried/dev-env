@@ -19,7 +19,7 @@ if ! cmp -s "$SOURCE_KEYBINDS_FILE" "$DEST_KEYBINDS_FILE" 2>/dev/null; then
 fi
 
 touch "$HYPR_CONF"
-REQUIRE_LINE='require("keybinds")'
+REQUIRE_LINE='require("custom_keybinds")'
 if ! rg -F "$REQUIRE_LINE" "$HYPR_CONF" >/dev/null; then
     echo "$REQUIRE_LINE" >>"$HYPR_CONF"
 fi
