@@ -15,7 +15,8 @@ if [ -d "$HOOKS_DIR" ]; then
     if [ ! -f "$HOOKS_DIR/theme-set" ]; then
         echo "Creating theme-set hook for Omarchy..."
         cp "$HOOKS_DIR/theme-set.sample" "$HOOKS_DIR/theme-set"
-        sudo echo "ln -sf \"\$HOME/.config/omarchy/current/theme/neovim.lua\" \"\$HOME/.config/nvim/lua/plugins/theme.lua\"" >>"$HOOKS_DIR/theme-set"
+        sudo echo "ln -sf \"\$HOME/.local/state/omarchy/current/theme/neovim.lua\" \"\$HOME/.config/nvim/lua/plugins/theme.lua\"" >>"$HOOKS_DIR/theme-set"
+        sudo echo "find /tmp -name 'nvim.*.0' -type s 2>/dev/null | while read -r s; do nvim --server \"\$s\" --remote-send ':lua require(\"lazy.core.loader\").reload(\"theme\")<CR>' 2>/dev/null; done" >>"$HOOKS_DIR/theme-set"
         echo -e "${GREEN}Omarchy theme-set hook created for nvim.${NC}"
     fi
 fi
