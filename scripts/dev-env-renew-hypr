@@ -4,8 +4,10 @@ echo "Renewing hypr config..."
 HYPR_DIR="$HOME/.config/hypr"
 HYPR_CONF="$HYPR_DIR/hyprland.lua"
 
+LUA_MODULE_NAME="dev-env_hypr"
+
 SOURCE_KEYBINDS_FILE="$PATH_DEV_ENV/scripts/custom_keybinds.lua"
-DEST_KEYBINDS_FILE="$HYPR_DIR/custom_keybinds.lua"
+DEST_KEYBINDS_FILE="$HYPR_DIR/$LUA_MODULE_NAME.lua"
 
 if [ ! -d "$HYPR_DIR" ]; then
     echo -e "${YELLOW}Hyprland is not used in this system. Skipping hypr config renewal.${NC}"
@@ -19,7 +21,7 @@ if ! cmp -s "$SOURCE_KEYBINDS_FILE" "$DEST_KEYBINDS_FILE" 2>/dev/null; then
 fi
 
 touch "$HYPR_CONF"
-REQUIRE_LINE='require("custom_keybinds")'
+REQUIRE_LINE="require(\"$LUA_MODULE_NAME\")"
 if ! rg -F "$REQUIRE_LINE" "$HYPR_CONF" >/dev/null; then
     echo "$REQUIRE_LINE" >>"$HYPR_CONF"
 fi
