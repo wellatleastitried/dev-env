@@ -4,6 +4,9 @@ echo "Renewing hypr config..."
 HYPR_DIR="$HOME/.config/hypr"
 HYPR_CONF="$HYPR_DIR/hyprland.lua"
 
+SOURCE_KEYBINDS_FILE="$PATH_DEV_ENV/scripts/custom_keybinds.lua"
+DEST_KEYBINDS_FILE="$HYPR_DIR/custom_keybinds.lua"
+
 if [ ! -d "$HYPR_DIR" ]; then
     echo -e "${YELLOW}Hyprland is not used in this system. Skipping hypr config renewal.${NC}"
     return
@@ -11,46 +14,14 @@ fi
 
 CURR_WORKING_DIR="$(pwd)"
 
-LEFT_BIND_SEARCH='hl\.dsp\.focus\(\{ direction = "left" \}\)'
-RIGHT_BIND_SEARCH='hl\.dsp\.focus\(\{ direction = "right" \}\)'
-UP_BIND_SEARCH='hl\.dsp\.focus\(\{ direction = "up" \}\)'
-DOWN_BIND_SEARCH='hl\.dsp\.focus\(\{ direction = "down" \}\)'
-VOLUME_UP_BIND_SEARCH="XF86AudioRaiseVolume"
-VOLUME_DOWN_BIND_SEARCH="XF86AudioLowerVolume"
-CAPS_REBIND_SEARCH="caps:escape"
-
-LEFT_BIND_LINE='hl.bind("SUPER + H", hl.dsp.focus({ direction = "left" }))'
-RIGHT_BIND_LINE='hl.bind("SUPER + L", hl.dsp.focus({ direction = "right" }))'
-UP_BIND_LINE='hl.bind("SUPER + K", hl.dsp.focus({ direction = "up" }))'
-DOWN_BIND_LINE='hl.bind("SUPER + J", hl.dsp.focus({ direction = "down" }))'
-VOLUME_UP_BIND_LINE='hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })'
-VOLUME_DOWN_BIND_LINE='hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { locked = true, repeating = true })'
-CAPS_REBIND_LINE='hl.config({ input = { kb_options = "caps:escape" } })'
+if ! cmp -s "$SOURCE_KEYBINDS_FILE" "$DEST_KEYBINDS_FILE" 2>/dev/null; then
+    cp "$SOURCE_KEYBINDS_FILE" "$DEST_KEYBINDS_FILE"
+fi
 
 touch "$HYPR_CONF"
-
-cd "$HYPR_DIR"
-
-if ! rg "$LEFT_BIND_SEARCH" "$HYPR_CONF" >/dev/null; then
-    echo "$LEFT_BIND_LINE" >>"$HYPR_CONF"
-fi
-if ! rg "$RIGHT_BIND_SEARCH" "$HYPR_CONF" >/dev/null; then
-    echo "$RIGHT_BIND_LINE" >>"$HYPR_CONF"
-fi
-if ! rg "$UP_BIND_SEARCH" "$HYPR_CONF" >/dev/null; then
-    echo "$UP_BIND_LINE" >>"$HYPR_CONF"
-fi
-if ! rg "$DOWN_BIND_SEARCH" "$HYPR_CONF" >/dev/null; then
-    echo "$DOWN_BIND_LINE" >>"$HYPR_CONF"
-fi
-if ! rg "$VOLUME_UP_BIND_SEARCH" "$HYPR_CONF" >/dev/null; then
-    echo "$VOLUME_UP_BIND_LINE" >>"$HYPR_CONF"
-fi
-if ! rg "$VOLUME_DOWN_BIND_SEARCH" "$HYPR_CONF" >/dev/null; then
-    echo "$VOLUME_DOWN_BIND_LINE" >>"$HYPR_CONF"
-fi
-if ! rg "$CAPS_REBIND_SEARCH" "$HYPR_CONF" >/dev/null; then
-    echo "$CAPS_REBIND_LINE" >>"$HYPR_CONF"
+REQUIRE_LINE='require("keybinds")'
+if ! rg -F "$REQUIRE_LINE" "$HYPR_CONF" >/dev/null; then
+    echo "$REQUIRE_LINE" >>"$HYPR_CONF"
 fi
 
 cd "$CURR_WORKING_DIR"

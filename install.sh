@@ -161,3 +161,4 @@ implement_custom_kernel_hook
 
 echo -e "${RED}NOTICE${NC}"
 echo "When modifying your configs, do it in this repos config folder using 'dev-env edit'. It will make deploying/saving the configuration simpler."
+
