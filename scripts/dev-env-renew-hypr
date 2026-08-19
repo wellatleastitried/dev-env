@@ -6,7 +6,7 @@ HYPR_CONF="$HYPR_DIR/hyprland.lua"
 
 LUA_MODULE_NAME="dev-env_hypr"
 
-SOURCE_KEYBINDS_FILE="$PATH_DEV_ENV/scripts/custom_keybinds.lua"
+SOURCE_KEYBINDS_FILE="$PATH_DEV_ENV/scripts/hyprland.lua"
 DEST_KEYBINDS_FILE="$HYPR_DIR/$LUA_MODULE_NAME.lua"
 
 if [ ! -d "$HYPR_DIR" ]; then

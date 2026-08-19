@@ -17,3 +17,7 @@ hl.unbind("XF86AudioLowerVolume")
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { locked = true, repeating = true })
 
 hl.config({ input = { kb_options = "caps:escape" } })
+
+o.window("discord", { workspace = "1" })
+o.window("firefox", { workspace = "2" })
+
