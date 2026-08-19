@@ -19,4 +19,6 @@ if [ -d "$HOOKS_DIR" ]; then
         sudo echo "find /tmp -name 'nvim.*.0' -type s 2>/dev/null | while read -r s; do nvim --server \"\$s\" --remote-send ':lua require(\"lazy.core.loader\").reload(\"theme\")<CR>' 2>/dev/null; done" >>"$HOOKS_DIR/theme-set"
         echo -e "${GREEN}Omarchy theme-set hook created for nvim.${NC}"
     fi
+else
+    echo -e "${YELLOW}Hooks directory for Omarchy not found, it has either been moved or this computer is not running Omarchy.${NC}"
 fi
