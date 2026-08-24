@@ -1,3 +1,23 @@
+local mason_jdtls = vim.fn.stdpath("data") .. "/mason/bin/jdtls"
+local function resolve_mise_java(root_dir)
+    local mise = vim.fn.exepath("mise")
+    if mise == "" then
+        return nil
+    end
+
+    local result = vim.system({ mise, "which", "java" }, { text = true, cwd = root_dir }):wait()
+    if result.code ~= 0 then
+        return nil
+    end
+
+    local java = vim.trim(result.stdout or "")
+    if java == "" then
+        return nil
+    end
+
+    return java
+end
+
 return {
     {
         "neovim/nvim-lspconfig",
@@ -13,6 +33,18 @@ return {
                         { "<C-h>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature help" },
                     },
                 },
+                jdtls = {
+                    cmd = { mason_jdtls },
+                    on_new_config = function(new_config, new_root_dir)
+                        local java = resolve_mise_java(new_root_dir)
+                        if java ~= nil then
+                            new_config.cmd = { mason_jdtls, "--java-executable", java }
+                            return
+                        end
+
+                        new_config.cmd = { mason_jdtls }
+                    end,
+                }
             },
         },
     },
