@@ -1,13 +1,3 @@
-local function java_for_this_project()
-    if vim.fn.executable("mise") == 1 then
-        local p = vim.trim(vim.fn.system("mise which java 2>/dev/null"))
-        if vim.v.shell_error == 0 and p ~= "" then
-            return p
-        end
-    end
-    return "/usr/lib/jvm/java-21-openjdk/bin/java"
-end
-
 return {
     {
         "neovim/nvim-lspconfig",
@@ -23,25 +13,18 @@ return {
                         { "<C-h>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature help" },
                     },
                 },
-                jdtls = {
-                    cmd = {
-                        vim.fn.stdpath("data") .. "/mason/bin/jdtls",
-                        "--java-executable",
-                        java_for_this_project(),
-                    },
-                },
             },
         },
     },
 
-    {
-        "mason-org/mason.nvim",
-        opts = {
-            ensure_installed = {
-                "lua-language-server",
-                "zls",
-                "bash-language-server",
-                "pyright",
+	{
+		"mason-org/mason.nvim",
+		opts = {
+			ensure_installed = {
+				"lua-language-server",
+				"zls",
+				"bash-language-server",
+				"pyright",
                 "clangd",
                 "cmake-language-server",
                 "css-lsp",
@@ -61,12 +44,8 @@ return {
                 "textlsp",
                 "yaml-language-server",
                 "clojure-lsp",
-            },
-            autoformat = false,
-        },
-    },
+			},
+			autoformat = false,
+		},
+	},
 }
-
-
-
-
