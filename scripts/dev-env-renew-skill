@@ -1,0 +1,27 @@
+#!/bin/bash
+
+echo "Renewing dev-env skill..."
+
+SKILLS_DIR="$HOME/.agents/skills"
+DEV_ENV_SKILL_DIR="$SKILLS_DIR/dev-env"
+SOURCE_SKILL_FILE="$PATH_DEV_ENV/ref/dev-env-skill/SKILL.md"
+DEST_SKILL_FILE="$DEV_ENV_SKILL_DIR/SKILL.md"
+
+if [ ! -d "$SKILLS_DIR" ]; then
+    mkdir -p "$SKILLS_DIR"
+    echo -e "${GREEN}Created $SKILLS_DIR${NC}"
+fi
+
+if [ ! -d "$DEV_ENV_SKILL_DIR" ]; then
+    mkdir -p "$DEV_ENV_SKILL_DIR"
+    echo -e "${GREEN}Created $DEV_ENV_SKILL_DIR${NC}"
+fi
+
+if [ ! -f "$DEST_SKILL_FILE" ] || ! cmp -s "$SOURCE_SKILL_FILE" "$DEST_SKILL_FILE" 2>/dev/null; then
+    cp "$SOURCE_SKILL_FILE" "$DEST_SKILL_FILE"
+    echo -e "${GREEN}Copied SKILL.md to $DEST_SKILL_FILE${NC}"
+else
+    echo -e "${GREEN}SKILL.md is already up to date at $DEST_SKILL_FILE${NC}"
+fi
+
+echo -e "${GREEN}dev-env skill renewed.${NC}"
