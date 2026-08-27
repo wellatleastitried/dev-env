@@ -17,10 +17,9 @@ return {
                 },
                 jdtls = {
                     cmd = {
-                        "mise",
-                        "exec",
-                        "--",
                         mason_jdtls,
+                        "--java-executable",
+                        vim.fn.trim(vim.fn.system("mise where java@latest")) .. "/bin/java",
                     },
                 }
             },
