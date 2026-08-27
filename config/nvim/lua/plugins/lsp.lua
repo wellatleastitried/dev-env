@@ -42,7 +42,6 @@ return {
                 "gopls",
                 "groovy-language-server",
                 "html-lsp",
-                "htmx-lsp",
                 "hyprls",
                 "jdtls",
                 "just-lsp",
