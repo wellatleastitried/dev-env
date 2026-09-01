@@ -11,7 +11,7 @@ return {
         },
 
         view_options = {
-            show_hidden = false,
+            show_hidden = true,
             -- This function defines what is considered a "hidden" file
             is_hidden_file = function(name, bufnr)
                 local m = name:match("^%.")
