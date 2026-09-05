@@ -93,7 +93,7 @@ ensure_tools_installed() {
 
 install_xnote() {
     cd /tmp
-    git clone https://github.com/wellatleastitried/xnote.git
+    git clone --depth 1 https://github.com/wellatleastitried/xnote.git
     cd xnote
     sudo install -m 755 ./xnote /usr/local/bin/xnote || echo "Installing xnote failed!"
     cd $DEV_ENV_PATH
@@ -111,11 +111,17 @@ ensure_repo_staged() {
 survived_questionaire() {
     echo -e "${YELLOW}Do you have a second nvme drive that has been added to your btrfs filesystem? (y/n)${NC}"
     read -r response
+    [[ "$response" == "y" ]] || return 1
+
     echo -e "${YELLOW}Do you use limine as your bootloader? (y/n)${NC}"
     read -r bootloader_response
+    [[ "$bootloader_response" == "y" ]] || return 1
+
     echo -e "${YELLOW}Do you want to implement a custom kernel hook to automatically decrypt and mount the drive on boot? (y/n)${NC}"
     read -r hook_response
-    return [[ "$response" == "y" && "$bootloader_response" == "y" && "$hook_response" == "y" ]]
+    [[ "$hook_response" == "y" ]] || return 1
+
+    return 0
 }
 
 implement_custom_kernel_hook() {
@@ -159,6 +165,6 @@ install_packages
 ensure_tools_installed
 implement_custom_kernel_hook
 
-echo -e "${RED}NOTICE${NC}"
+echo -e "${RED}NOTICE FOR ME - NOT YOU${NC}"
 echo "When modifying your configs, do it in this repos config folder using 'dev-env edit'. It will make deploying/saving the configuration simpler."
 
