@@ -7,6 +7,7 @@ if [ -d ~/.config/nvim ]; then
 fi
 mkdir -p ~/.config
 cp -r "$PATH_DEV_ENV/config/nvim" ~/.config/
+ln -sf "$HOME/.local/state/omarchy/current/theme/neovim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
 echo -e "${GREEN}nvim config renewed.${NC}"
 
 # Set up Omarchy hook for theme syncing
