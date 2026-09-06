@@ -5,11 +5,15 @@ return {
   },
   {
     "folke/snacks.nvim",
-    enabled = false,
     opts = {
-      explorer = {
-        enabled = false,
-      },
+      explorer = { enabled = false },
+      picker = { enabled = false },
+      terminal = { enabled = false },
+      win = { enabled = false },
+      quickfile = { enabled = true },
+      layout = { enabled = false },
+      bigfile = { enabled = true },
+      util = { enabled = true },
     },
   },
 }
