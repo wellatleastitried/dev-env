@@ -1,5 +1,5 @@
 return {
-  "wellatleastitried/bitwise.nvim",
+  "wellatleastitried/bitwise-visualizer.nvim",
   main = "bitwise-visualizer",
   event = "VeryLazy",
   opts = {
