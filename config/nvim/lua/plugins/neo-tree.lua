@@ -5,6 +5,7 @@ return {
   },
   {
     "folke/snacks.nvim",
+    enabled = false,
     opts = {
       explorer = {
         enabled = false,
