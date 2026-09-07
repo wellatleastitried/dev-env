@@ -4,6 +4,7 @@ return {
   event = "VeryLazy",
   opts = {
     -- everything is optional; see the configuration reference
+    auto = false,
     width = "auto",
   },
 }
