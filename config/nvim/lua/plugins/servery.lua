@@ -1,5 +1,5 @@
 return {
-    "wurli/servery",
+    "wurli/servery.nvim",
     opts = {
         dirs = { "~" },
         session_dir = vim.fs.joinpath(vim.fn.stdpath("cache"), "servery.nvim"),

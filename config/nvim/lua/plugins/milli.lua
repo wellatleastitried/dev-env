@@ -3,7 +3,7 @@ return {
     lazy = false,
     opts = {
         screensaver = {
-            shader = "skeleton",
+            shader = "robot",
             after = 300,
         }
     }
