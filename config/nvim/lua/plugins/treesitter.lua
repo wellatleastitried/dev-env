@@ -12,7 +12,6 @@ return {
                 "c",
                 "lua",
                 "markdown",
-                "forth",
                 "asm",
             },
             sync_install = false,

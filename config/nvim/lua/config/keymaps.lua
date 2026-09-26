@@ -11,3 +11,4 @@ vim.keymap.set("n", "<leader>fe", vim.cmd.Ex, { desc = "Open file explorer" })
 ]]
 
 vim.keymap.del("n", "s")
+vim.keymap.set("n", "<c-f>", "<cmd>Sv<cr>", { desc = "Switch nvim sessions" })
