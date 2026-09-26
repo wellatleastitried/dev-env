@@ -1,7 +1,7 @@
 return {
     "wurli/servery.nvim",
     opts = {
-        dirs = { "~/Github/*" },
+        dirs = vim.fn.glob(vim.fn.expand("~/Github") .. "/*", true, true),
         session_dir = vim.fs.joinpath(vim.fn.stdpath("cache"), "servery.nvim"),
         ui = {
             -- Options: "builtin" | "snacks" | "fzf" | "telescope" | "mini_pick"
