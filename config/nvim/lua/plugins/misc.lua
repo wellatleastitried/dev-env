@@ -31,4 +31,8 @@ return {
             })
         end,
     },
+    {
+        "akinsho/bufferline.nvim",
+        enabled = false,
+    },
 }
