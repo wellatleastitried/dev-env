@@ -3,7 +3,7 @@ return {
     lazy = false,
     opts = {
         screensaver = {
-            shader = vim.fs.stdpath("data") + "/milli/splashes/robot",
+            shader = "blackhole",
             after = 300,
         }
     }
