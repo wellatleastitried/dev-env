@@ -4,27 +4,22 @@ end
 
 local function get_repo_dirs(base)
     local dirs = {}
-    local top_level = vim.fn.glob(base .. "/*", true, true)
 
-    for _, path in ipairs(top_level) do
-        if vim.fn.isdirectory(path) == 1 then
-            if is_git_repo(path) then
-                -- It's a repo itself; stop here so we don't descend
-                -- into its submodules.
-                table.insert(dirs, path)
-            else
-                -- Not a repo — treat as a container folder, check
-                -- one level deeper for nested repos.
-                local nested = vim.fn.glob(path .. "/*", true, true)
-                for _, subpath in ipairs(nested) do
-                    if vim.fn.isdirectory(subpath) == 1 and is_git_repo(subpath) then
-                        table.insert(dirs, subpath)
-                    end
-                end
+    local function scan(path)
+        if is_git_repo(path) then
+            table.insert(dirs, path)
+            return -- don't recurse into a repo — this is what skips submodules
+        end
+
+        local entries = vim.fn.glob(path .. "/*", true, true)
+        for _, entry in ipairs(entries) do
+            if vim.fn.isdirectory(entry) == 1 then
+                scan(entry)
             end
         end
     end
 
+    scan(base)
     return dirs
 end
 
