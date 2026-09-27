@@ -1,3 +1,4 @@
+--[[
 local function is_git_repo(path)
     return vim.fn.isdirectory(path .. "/.git") == 1
 end
@@ -22,11 +23,15 @@ local function get_repo_dirs(base)
     scan(base)
     return dirs
 end
+--]]
 
 return {
-    "wurli/servery.nvim",
+    --"wurli/servery.nvim",
+    "wellatleastitried/servery.nvim",
+    branch = "wildcard-expansion",
     opts = {
-        dirs = get_repo_dirs(vim.fn.expand("~/Github")),
+        --dirs = get_repo_dirs(vim.fn.expand("~/Github")),
+        dirs = { "~/Github/**" },
         session_dir = vim.fs.joinpath(vim.fn.stdpath("cache"), "servery.nvim"),
         ui = {
             -- Options: "builtin" | "snacks" | "fzf" | "telescope" | "mini_pick"
