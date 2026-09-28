@@ -31,7 +31,7 @@ return {
     branch = "wildcard-expansion",
     opts = {
         --dirs = get_repo_dirs(vim.fn.expand("~/Github")),
-        dirs = { "~/Github/**" },
+        dirs = { "~/Github/*" },
         session_dir = vim.fs.joinpath(vim.fn.stdpath("cache"), "servery.nvim"),
         ui = {
             -- Options: "builtin" | "snacks" | "fzf" | "telescope" | "mini_pick"
