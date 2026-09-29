@@ -1,5 +1,7 @@
 local mason_jdtls = vim.fn.stdpath("data") .. "/mason/bin/jdtls"
 
+local java = vim.fn.trim(vim.fn.system("mise where java@latest")) .. "/bin/java"
+
 return {
     {
         "neovim/nvim-lspconfig",
@@ -19,7 +21,39 @@ return {
                     cmd = {
                         mason_jdtls,
                         "--java-executable",
-                        vim.fn.trim(vim.fn.system("mise where java@latest")) .. "/bin/java",
+                        java
+                    },
+                    settings = {
+                        java = {
+                            configuration = {
+                                updateBuildConfiguration = "automatic",
+                            },
+                            import = {
+                                gradle = {
+                                    enabled = true,
+                                    wrapper = {
+                                        enabled = true,
+                                    },
+                                    offline = {
+                                        enabled = false,
+                                    },
+                                },
+
+                                maven = {
+                                    enabled = true,
+                                },
+                            },
+                            eclipse = {
+                                downloadSources = true,
+                            },
+                            maven = {
+                                downloadSources = true,
+                                updateSnapshots = true,
+                            },
+                            references = {
+                                includeDecompiledSources = true,
+                            },
+                        },
                     },
                 }
             },
