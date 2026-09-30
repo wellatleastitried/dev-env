@@ -57,7 +57,9 @@ return {
                             completion = { enabled = true },
                             jdt = {
                                 ls = {
-                                    vmargs = "-javaagent:" .. vim.fn.stdpath("config") .. "/lib/lombok-1.18.30.jar"
+                                    vmargs = {
+                                        "-javaagent:" .. vim.fn.stdpath("config") .. "/lib/lombok-1.18.48.jar"
+                                    }
                                 },
                             },
                         },
