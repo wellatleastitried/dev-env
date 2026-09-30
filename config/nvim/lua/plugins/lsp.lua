@@ -23,11 +23,15 @@ return {
                         "--java-executable",
                         java
                     },
+                    init_options = {
+                        extendedClientCapabilities = {
+                            resolveAdditionalTextEditsSupport = true,
+                        },
+                        bundles = {},
+                    },
                     settings = {
                         java = {
-                            configuration = {
-                                updateBuildConfiguration = "automatic",
-                            },
+                            configuration = { updateBuildConfiguration = "automatic" },
                             import = {
                                 gradle = {
                                     enabled = true,
@@ -43,24 +47,18 @@ return {
                                     enabled = true,
                                 },
                             },
-                            eclipse = {
-                                downloadSources = true,
-                            },
+                            eclipse = { downloadSources = true },
                             maven = {
                                 downloadSources = true,
                                 updateSnapshots = true,
                             },
-                            references = {
-                                includeDecompiledSources = true,
-                            },
-                            saveActions = {
-                                organizeImports = true,
-                            },
-                            completion = {
-                                enabled = true,
-                            },
-                            contentProvider = {
-                                preferred = "fernflower",
+                            references = { includeDecompiledSources = true },
+                            saveActions = { organizeImports = true },
+                            completion = { enabled = true },
+                            jdt = {
+                                ls = {
+                                    nonnulltypes = { "org.jetbrains.annotation.NotNull" },
+                                },
                             },
                         },
                     },
