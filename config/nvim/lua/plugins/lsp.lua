@@ -24,6 +24,12 @@ return {
                         "--java-executable",
                         java
                     },
+                    on_attach = function(client, bufnr)
+                        vim.lsp.buf_request(bufnr, "java.project.updateJdk", {
+                            jdkPath = jdk_home,
+                            projectSelectionMode = "automatic",
+                        }, function() end)
+                    end,
                     init_options = {
                         extendedClientCapabilities = {
                             resolveAdditionalTextEditsSupport = true,
