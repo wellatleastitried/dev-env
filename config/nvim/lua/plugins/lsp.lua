@@ -20,6 +20,7 @@ return {
                 jdtls = {
                     cmd = {
                         mason_jdtls,
+                        "--jvm-arg=-javaagent:" .. vim.fn.stdpath("config") .. "/lib/lombok-1.18.48.jar",
                         "--java-executable",
                         java
                     },
@@ -55,6 +56,7 @@ return {
                             references = { includeDecompiledSources = true },
                             saveActions = { organizeImports = true },
                             completion = { enabled = true },
+                            --[[
                             jdt = {
                                 ls = {
                                     vmargs = {
@@ -62,6 +64,7 @@ return {
                                     }
                                 },
                             },
+                            ]]
                         },
                     },
                 }
