@@ -27,6 +27,7 @@ return {
                     init_options = {
                         extendedClientCapabilities = {
                             resolveAdditionalTextEditsSupport = true,
+                            classFileContentsSupport = true,
                         },
                         bundles = {},
                     },
@@ -53,10 +54,7 @@ return {
                                 downloadSources = true,
                                 updateSnapshots = true,
                             },
-                            references = {
-                                includeDecompiledSources = true,
-                                classFileContentsSupport = true,
-                            },
+                            references = { includeDecompiledSources = true },
                             saveActions = { organizeImports = true },
                             completion = { enabled = true },
                             --[[
