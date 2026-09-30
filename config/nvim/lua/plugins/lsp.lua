@@ -1,6 +1,6 @@
 local mason_jdtls = vim.fn.stdpath("data") .. "/mason/bin/jdtls"
-
-local java = vim.fn.trim(vim.fn.system("mise where java@latest")) .. "/bin/java"
+local jdk_home = vim.fn.trim(vim.fn.system("mise where java@latest"))
+local java = jdk_home .. "/bin/java"
 
 return {
     {
@@ -33,6 +33,7 @@ return {
                     },
                     settings = {
                         java = {
+                            home = jdk_home,
                             configuration = { updateBuildConfiguration = "automatic" },
                             import = {
                                 gradle = {
