@@ -53,7 +53,10 @@ return {
                                 downloadSources = true,
                                 updateSnapshots = true,
                             },
-                            references = { includeDecompiledSources = true },
+                            references = {
+                                includeDecompiledSources = true,
+                                classFileContentsSupport = true,
+                            },
                             saveActions = { organizeImports = true },
                             completion = { enabled = true },
                             --[[
