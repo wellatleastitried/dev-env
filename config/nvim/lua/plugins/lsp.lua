@@ -57,7 +57,7 @@ return {
                             completion = { enabled = true },
                             jdt = {
                                 ls = {
-                                    nonnulltypes = { "org.jetbrains.annotation.NotNull" },
+                                    vmargs = "-javaagent:" .. vim.fn.stdpath("config") .. "/lib/lombok-1.18.30.jar"
                                 },
                             },
                         },
