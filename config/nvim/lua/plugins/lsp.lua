@@ -53,6 +53,15 @@ return {
                             references = {
                                 includeDecompiledSources = true,
                             },
+                            saveActions = {
+                                organizeImports = true,
+                            },
+                            completion = {
+                                enabled = true,
+                            },
+                            contentProvider = {
+                                preferred = "fernflower",
+                            },
                         },
                     },
                 }
