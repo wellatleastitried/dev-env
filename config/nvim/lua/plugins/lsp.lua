@@ -58,7 +58,7 @@ return {
                             saveActions = { organizeImports = true },
                             completion = { enabled = true },
                             contentProvider = {
-                                preferred = "fernflower",
+                                preferred = "cfr",
                             },
                         },
                     },
