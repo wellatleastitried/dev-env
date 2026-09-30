@@ -1,96 +1,94 @@
 #!/bin/bash
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-NC='\033[0m'
-
-show_help() {
-    echo "Usage: $(basename $0) command"
-    echo "Commands:"
-    echo "  update    Update the development environment configurations"
-    echo "  help      Show this help message. CAN ALSO BE USED AS: '[command] help' for more info on a specific command"
-    echo "  add       choose what to add to env (alias, PATH, custom line to .bashrc)"
+cmd_update() {
+    source "$PATH_DEV_ENV/scripts/dev-env-update-configs"
 }
 
-if [ -z "$1" ] || [ "$1" == "update" ]; then
-    source "$PATH_DEV_ENV/scripts/dev-env-update-configs"
-    exit 0
-elif [ -z "$2" ]; then
+cmd_edit() {
     if [ "$1" == "help" ]; then
-        show_help
-        exit 0
-    elif [ "$1" == "add" ]; then
-        select choice in "Alias" "PATH" "Custom" "Exit"; do
-            case $choice in
-            Alias)
-                source "$PATH_DEV_ENV/scripts/dev-env-add-alias"
-                break
-                ;;
-            PATH)
-                source "$PATH_DEV_ENV/scripts/dev-env-add-path"
-                break
-                ;;
-            Custom)
-                source "$PATH_DEV_ENV/scripts/dev-env-add-custom-line"
-                break
-                ;;
-            Exit)
-                echo "Exiting..."
-                exit 0
-                ;;
-            esac
-        done
-        exit 0
-    elif [ "$1" == "edit" ]; then
-        source "$PATH_DEV_ENV/scripts/dev-env-edit-configs"
-        exit 0
+        echo "Open the configs for your dev-env in your editor."
+        return 0
     fi
-elif [ -z "$3" ]; then
-    if [ "$1" == "help" ]; then
-        if [ "$2" == "help" ]; then
-            echo "$(basename $0) help hypr: Shows syntax to modify hyprland keybinds."
-            echo "$(basename $0) help i3: Shows syntax to modify i3wm keybinds."
-            echo "$(basename $0) help vim: Shows how to exit vim :)"
-            exit 0
-        elif [ "$2" == "hypr" ]; then
-            echo "Find your config file. Likely in ~/.config/hypr/hyprland.conf"
-            echo "  Unbind the existing keybind if it is already set using: unbind = SUPER, left"
-            echo "  Set a new keybind using (example): bindd = SUPER, H, Move focus left, movefocus, l"
-            exit 0
-        elif [ "$2" == "i3" ]; then
-            echo "Find your config file. Likely in ~/.config/i3/config"
-            echo "  Set a new keybind using (example): bindsym $mod+H focus left"
-            exit 0
-        elif [ "$2" == "vim" ]; then
-            echo "How to exit vim/nvim:"
-            echo "  Wait holy shit I completely forgot..."
-            exit 0
-        fi
-    elif [ "$1" == "add" ]; then
-        if [ "$2" == "help" ]; then
+    source "$PATH_DEV_ENV/scripts/dev-env-edit-configs"
+}
+
+cmd_add() {
+    case "$1" in
+        help)
             echo "Usage: $(basename $0) add [alias|path|custom]"
             echo "  alias  - Add a new alias to your shell configuration"
             echo "  path   - Add a new path to your PATH environment variable"
             echo "  custom - Add a custom line to your shell configuration"
-            exit 0
-        elif [ "$2" == "alias" ]; then
+            ;;
+        alias)
             source "$PATH_DEV_ENV/scripts/dev-env-add-alias"
-            exit 0
-        elif [ "$2" == "path" ]; then
+            ;;
+        path)
             source "$PATH_DEV_ENV/scripts/dev-env-add-path"
-            exit 0
-        elif [ "$2" == "custom" ]; then
+            ;;
+        custom)
             source "$PATH_DEV_ENV/scripts/dev-env-add-custom-line"
-            exit 0
-        fi
-    elif [ "$1" == "edit" ]; then
-        if [ "$2" == "help" ]; then
-            echo "Open the configs for your dev-env in your editor."
-            exit 0
-        fi
-    fi
-fi
+            ;;
+        *)
+            select choice in "Alias" "PATH" "Custom" "Exit"; do
+                case $choice in
+                    Alias) source "$PATH_DEV_ENV/scripts/dev-env-add-alias"; break ;;
+                    PATH)  source "$PATH_DEV_ENV/scripts/dev-env-add-path"; break ;;
+                    Custom) source "$PATH_DEV_ENV/scripts/dev-env-add-custom-line"; break ;;
+                    Exit) echo "Exiting..."; exit 0 ;;
+                esac
+            done
+            ;;
+    esac
+}
 
-show_help
-exit 1
+cmd_help() {
+    if [ -z "$1" ]; then
+        echo "Usage: $(basename $0) command"
+        echo "Commands:"
+        echo "  update    Update the development environment configurations"
+        echo "  add       Add to your shell environment (alias, PATH, or custom)"
+        echo "  edit      Edit dev-env configuration files"
+        echo "  help      Show help (or 'command help' for command-specific info)"
+        return 0
+    fi
+
+    case "$1" in
+        hypr)
+            echo "Find your config file. Likely in ~/.config/hypr/hyprland.conf"
+            echo "  Unbind: unbind = SUPER, left"
+            echo "  Bind (example): bindd = SUPER, H, Move focus left, movefocus, l"
+            ;;
+        i3)
+            echo "Find your config file. Likely in ~/.config/i3/config"
+            echo "  Bind (example): bindsym \$mod+H focus left"
+            ;;
+        vim)
+            echo "How to exit vim/nvim:"
+            echo "  Wait holy shit I completely forgot..."
+            ;;
+        *)
+            echo "Unknown topic: $1"
+            return 1
+            ;;
+    esac
+}
+
+main() {
+    local cmd="${1:-update}"
+    shift || true
+
+    case "$cmd" in
+        update) cmd_update "$@" ;;
+        edit)   cmd_edit "$@" ;;
+        add)    cmd_add "$@" ;;
+        help)   cmd_help "$@" ;;
+        *)
+            echo "Unknown command: $cmd"
+            cmd_help
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
