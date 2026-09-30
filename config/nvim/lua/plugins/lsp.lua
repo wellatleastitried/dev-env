@@ -20,7 +20,7 @@ return {
                 jdtls = {
                     cmd = {
                         mason_jdtls,
-                        "--jvm-arg=-javaagent:" .. vim.fn.stdpath("config") .. "/lib/lombok-1.18.48.jar",
+                        "--jvm-arg=-javaagent:" .. vim.fn.stdpath("config") .. "/lib/lsp/java/lombok-1.18.48.jar",
                         "--java-executable",
                         java
                     },
