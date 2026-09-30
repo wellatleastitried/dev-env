@@ -17,55 +17,6 @@ return {
                         { "<C-h>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature help" },
                     },
                 },
-                --[[
-                jdtls = {
-                    cmd = {
-                        mason_jdtls,
-                        "--jvm-arg=-javaagent:" .. vim.fn.stdpath("config") .. "/lib/lsp/java/lombok-1.18.48.jar",
-                        "--java-executable",
-                        java
-                    },
-                    init_options = {
-                        extendedClientCapabilities = {
-                            resolveAdditionalTextEditsSupport = true,
-                            classFileContentsSupport = true,
-                        },
-                        bundles = {},
-                    },
-                    settings = {
-                        java = {
-                            home = jdk_home,
-                            configuration = { updateBuildConfiguration = "automatic" },
-                            import = {
-                                gradle = {
-                                    enabled = true,
-                                    wrapper = {
-                                        enabled = true,
-                                    },
-                                    offline = {
-                                        enabled = false,
-                                    },
-                                },
-
-                                maven = {
-                                    enabled = true,
-                                },
-                            },
-                            eclipse = { downloadSources = true },
-                            maven = {
-                                downloadSources = true,
-                                updateSnapshots = true,
-                            },
-                            references = { includeDecompiledSources = true },
-                            saveActions = { organizeImports = true },
-                            completion = { enabled = true },
-                            contentProvider = {
-                                preferred = "procyon",
-                            },
-                        },
-                    },
-                }
-                ]]
             },
         },
     },
@@ -122,20 +73,17 @@ return {
             })
         end,
     },
-
 	{
 		"mason-org/mason.nvim",
 		opts = {
 			ensure_installed = {
 				"lua-language-server",
-				"zls",
 				"bash-language-server",
 				"pyright",
                 "clangd",
                 "cmake-language-server",
                 "css-lsp",
                 "gopls",
-                "groovy-language-server",
                 "html-lsp",
                 "jdtls",
                 "just-lsp",
@@ -144,7 +92,6 @@ return {
                 "stylua",
                 "textlsp",
                 "yaml-language-server",
-                "clojure-lsp",
 			},
 			autoformat = false,
 		},
