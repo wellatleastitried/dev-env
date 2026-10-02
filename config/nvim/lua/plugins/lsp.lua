@@ -1,6 +1,31 @@
---local mason_jdtls = vim.fn.stdpath("data") .. "/mason/bin/jdtls"
---local jdk_home = vim.fn.trim(vim.fn.system("mise where java@latest"))
---local java = jdk_home .. "/bin/java"
+local function is_jbang(bufnr)
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 20, false)
+  for _, line in ipairs(lines) do
+    if line:match("^///?usr/bin/env jbang")
+      or line:match("^//DEPS ")
+      or line:match("^//JAVA ")
+      or line:match("^//SOURCES ") then
+      return true
+    end
+  end
+  return false
+end
+
+_G.is_jbang = is_jbang
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = "*.java",
+  group = vim.api.nvim_create_augroup("JBangDetachJdtls", { clear = true }),
+  callback = function(args)
+    if not is_jbang(args.buf) then
+      return
+    end
+    for _, client in ipairs(vim.lsp.get_clients({ bufnr = args.buf, name = "jdtls" })) do
+      vim.lsp.buf_detach_client(args.buf, client.id)
+      vim.diagnostic.reset(vim.lsp.diagnostic.get_namespace(client.id), args.buf)
+    end
+  end,
+})
 
 return {
     {
@@ -32,11 +57,8 @@ return {
             local jdtls = require("jdtls")
 
             -- Bail out if it is a JBang script
-            local lines = vim.api.nvim_buf_get_lines(0, 0, 20, false)
-            for _, l in ipairs(lines) do
-                if l:match("^///?usr/bin/env jbang") or l:match("^//DEPS ") then
-                    return
-                end
+            if _G.is_jbang(0) then
+                return
             end
 
             -- Otherwise run normally
