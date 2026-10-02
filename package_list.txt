@@ -11,3 +11,4 @@ pipewire-alsa
 bat
 man-pages
 sbcl
+jbang

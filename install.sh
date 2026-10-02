@@ -138,7 +138,7 @@ install_system_packages() {
     if [ ${#FAILED_PACKAGES[@]} -gt 0 ]; then
         echo -e "${YELLOW}Warning: ${#FAILED_PACKAGES[@]} package(s) failed to install:${NC}"
         for failed_pkg in "${FAILED_PACKAGES[@]}"; do
-            echo -e "  ${RED}✗${NC} $failed_pkg"
+            echo -e "  ${RED}x${NC} $failed_pkg"
         done
     fi
 }
@@ -236,7 +236,7 @@ implement_custom_kernel_hook() {
         sudo cp "$PATH_DEV_ENV/config/initcpio/hooks/cryptdrive2" /etc/initcpio/hooks/
         sudo cp "$PATH_DEV_ENV/config/initcpio/install/cryptdrive2" /etc/initcpio/install/
 
-        echo -e "${YELLOW}Do you use omarchy as your Arch Linux installation base? (y/n)${NC}"
+        echo -e "${YELLOW}Do you use Omarchy as your Arch Linux installation base? (y/n)${NC}"
         read -r omarchy_response
 
         if [[ "$omarchy_response" == "y" ]]; then
@@ -273,7 +273,7 @@ print_final_summary() {
     echo -e "${GREEN}========================================${NC}"
 
     if [ ${#FAILED_PACKAGES[@]} -gt 0 ]; then
-        echo -e "${RED}⚠️  WARNING: Some packages failed to install:${NC}"
+        echo -e "${RED}WARNING: Some packages failed to install:${NC}"
         for failed_pkg in "${FAILED_PACKAGES[@]}"; do
             echo -e "  ${RED}✗${NC} $failed_pkg"
         done
