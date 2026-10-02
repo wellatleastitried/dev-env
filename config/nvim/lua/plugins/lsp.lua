@@ -61,8 +61,6 @@ return {
 
             local jdtls = require("jdtls")
 
-
-            -- TODO: Verify this works
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = "java",
                 group = vim.api.nvim_create_augroup("JdtlsStart", { clear = true }),
@@ -118,58 +116,6 @@ return {
             if vim.bo.filetype == "java" then
                 vim.api.nvim_exec_autocmds("FileType", { group = "JdtlsStart" })
             end
-
-
-
-            --[[
-            -- Bail out if it is a JBang script
-            if _G.is_jbang(0) then
-                return
-            end
-
-            -- Otherwise run normally
-            jdtls.start_or_attach({
-                cmd = {
-                    java,
-                    "-javaagent:" .. vim.fn.stdpath("config") .. "/lib/lsp/java/lombok-1.18.48.jar",
-                    "-Declipse.application=org.eclipse.jdt.ls.core.id1",
-                    "-Dosgi.bundles.defaultStartLevel=4",
-                    "-Declipse.product=org.eclipse.jdt.ls.core.product",
-                    "-Dlog.protocol=true",
-                    "-Dlog.level=ALL",
-                    "-Xms1g",
-                    "--add-modules=ALL-SYSTEM",
-                    "--add-opens", "java.base/java.util=ALL-UNNAMED",
-                    "--add-opens", "java.base/java.lang=ALL-UNNAMED",
-                    "-jar", launcher_jar,
-                    "-configuration", mason_path .. "/packages/jdtls/config_linux",
-                    "-data", vim.fn.stdpath("cache") .. "/jdtls/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t"),
-                },
-                root_dir = vim.fs.root(0, { ".git", "mvnw", "gradlew" }),
-                settings = {
-                    java = {
-                        home = jdk_home,
-                        configuration = { updateBuildConfiguration = "automatic" },
-                        import = {
-                            gradle = {
-                                enabled = true,
-                                wrapper = { enabled = true },
-                                offline = { enabled = false },
-                            },
-                            maven = { enabled = true },
-                        },
-                        eclipse = { downloadSources = true },
-                        maven = {
-                            downloadSources = true,
-                            updateSnapshots = true,
-                        },
-                        references = { includeDecompiledSources = true },
-                        saveActions = { organizeImports = true },
-                        completion = { enabled = true },
-                    },
-                },
-            })
-            ]]
         end,
     },
 	{
