@@ -30,6 +30,16 @@ return {
             local launcher_jar = vim.fn.glob(mason_path .. "/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar", true, true)[1]
 
             local jdtls = require("jdtls")
+
+            -- Bail out if it is a JBang script
+            local lines = vim.api.nvim_buf_get_lines(0, 0, 20, false)
+            for _, l in ipairs(lines) do
+                if l:match("^///?usr/bin/env jbang") or l:match("^//DEPS ") then
+                    return
+                end
+            end
+
+            -- Otherwise run normally
             jdtls.start_or_attach({
                 cmd = {
                     java,
@@ -96,15 +106,4 @@ return {
 			autoformat = false,
 		},
 	},
-    {
-        'fintanmm/jbang-nvim',
-        config = function()
-            require('jbang').setup({
-                cmd = 'jbang',
-                terminal = true,
-                term_height = 12,
-                global_flags = {},
-            })
-        end,
-    }
 }
