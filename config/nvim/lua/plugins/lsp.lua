@@ -18,6 +18,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   group = vim.api.nvim_create_augroup("JBangDetachJdtls", { clear = true }),
   callback = function(args)
     if not is_jbang(args.buf) then
+      vim.diagnostic.enable(true, { bufnr = args.buf })
       return
     end
     vim.schedule(function()
@@ -26,7 +27,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
           vim.lsp.buf_detach_client(args.buf, client.id)
         end
       end
-      vim.diagnostic.reset(nil, args.buf)
+      vim.diagnostic.enable(false, { bufnr = args.buf })
     end)
   end,
 })
@@ -67,6 +68,7 @@ return {
                 group = vim.api.nvim_create_augroup("JdtlsStart", { clear = true }),
                 callback = function(args)
                     if _G.is_jbang(args.buf) then
+                        vim.diagnostic.enable(false, { bufnr = args.buf })
                         return
                     end
                     jdtls.start_or_attach({
