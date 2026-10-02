@@ -96,4 +96,15 @@ return {
 			autoformat = false,
 		},
 	},
+    {
+        'fintanmm/jbang-nvim',
+        config = function()
+            require('jbang').setup({
+                cmd = 'jbang',
+                terminal = true,
+                term_height = 12,
+                global_flags = {},
+            })
+        end,
+    }
 }
