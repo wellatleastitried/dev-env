@@ -32,7 +32,7 @@ return {
                 pattern = "java",
                 group = vim.api.nvim_create_augroup("JdtlsStart", { clear = true }),
                 callback = function(args)
-                    if require("jbang").is_jbang(args.buf) then return end
+                    --if require("jbang").is_jbang(args.buf) then return end
                     jdtls.start_or_attach({
                         cmd = {
                             java,
