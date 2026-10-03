@@ -13,6 +13,7 @@ return {
                         { "<C-h>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature help" },
                     },
                 },
+                jdtls = { enabled = false },
             },
         },
     },
