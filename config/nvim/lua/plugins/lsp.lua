@@ -1,37 +1,3 @@
-local function is_jbang(bufnr)
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, 20, false)
-  for _, line in ipairs(lines) do
-    if line:match("^///?usr/bin/env jbang")
-      or line:match("^//DEPS ")
-      or line:match("^//JAVA ")
-      or line:match("^//SOURCES ") then
-      return true
-    end
-  end
-  return false
-end
-
-_G.is_jbang = is_jbang
-
-vim.api.nvim_create_autocmd("BufWritePost", {
-  pattern = "*.java",
-  group = vim.api.nvim_create_augroup("JBangDetachJdtls", { clear = true }),
-  callback = function(args)
-    if not is_jbang(args.buf) then
-      vim.diagnostic.enable(true, { bufnr = args.buf })
-      return
-    end
-    vim.schedule(function()
-      for _, client in ipairs(vim.lsp.get_clients({ bufnr = args.buf })) do
-        if client.name:find("jdt") then
-          vim.lsp.buf_detach_client(args.buf, client.id)
-        end
-      end
-      vim.diagnostic.enable(false, { bufnr = args.buf })
-    end)
-  end,
-})
-
 return {
     {
         "neovim/nvim-lspconfig",
@@ -65,10 +31,7 @@ return {
                 pattern = "java",
                 group = vim.api.nvim_create_augroup("JdtlsStart", { clear = true }),
                 callback = function(args)
-                    if _G.is_jbang(args.buf) then
-                        vim.diagnostic.enable(false, { bufnr = args.buf })
-                        return
-                    end
+                    if require("jbang").is_jbang(args.buf) then return end
                     jdtls.start_or_attach({
                         cmd = {
                             java,
