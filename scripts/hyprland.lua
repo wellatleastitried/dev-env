@@ -7,11 +7,14 @@ hl.bind("SUPER + L", hl.dsp.focus({ direction = "right" }))
 hl.unbind("SUPER + K")
 hl.bind("SUPER + K", hl.dsp.focus({ direction = "up" }))
 
-hl.unbind("SUPER + E")
-hl.bind("SUPER + E", hl.dsp.exec_cmd("/home/wellatleastitried/.config/omarchy/plugins/omamail/scripts/mailto.sh"))
-
 hl.unbind("SUPER + J")
 hl.bind("SUPER + J", hl.dsp.focus({ direction = "down" }))
+
+hl.unbind("SUPER + -")
+hl.bind("SUPER + -", hl.dsp.exec_cmd("gpu-screen-recorder -w focused -f 60 -a default_output -o ~/Videos/Clips/test_video.mp4"))
+
+hl.unbind("SUPER + E")
+hl.bind("SUPER + E", hl.dsp.exec_cmd("/home/wellatleastitried/.config/omarchy/plugins/omamail/scripts/mailto.sh"))
 
 hl.unbind("XF86AudioRaiseVolume")
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })

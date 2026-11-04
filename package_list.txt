@@ -12,3 +12,4 @@ bat
 man-pages
 sbcl
 jbang
+gpu-screen-recorder
