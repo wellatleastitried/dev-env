@@ -11,7 +11,7 @@ hl.unbind("SUPER + J")
 hl.bind("SUPER + J", hl.dsp.focus({ direction = "down" }))
 
 hl.unbind("SUPER + SHIFT + MINUS")
-hl.bind("SUPER + SHIFT + MINUS", hl.dsp.exec_cmd("gpu-screen-recorder -w focused -f 60 -a default_output -o ~/Videos/Clips/test_video.mp4"))
+hl.bind("SUPER + SHIFT + MINUS", hl.dsp.exec_cmd("gpu-screen-recorder -w focused -f 60 -a default_output -o ~/Videos/Clips/test_video.mp4 && notify-send Clip Saved"))
 
 hl.unbind("SUPER + E")
 hl.bind("SUPER + E", hl.dsp.exec_cmd("/home/wellatleastitried/.config/omarchy/plugins/omamail/scripts/mailto.sh"))
