@@ -10,9 +10,6 @@ hl.bind("SUPER + K", hl.dsp.focus({ direction = "up" }))
 hl.unbind("SUPER + J")
 hl.bind("SUPER + J", hl.dsp.focus({ direction = "down" }))
 
-hl.unbind("SUPER + SHIFT + MINUS")
-hl.bind("SUPER + SHIFT + MINUS", hl.dsp.exec_cmd("gpu-screen-recorder -w focused -f 60 -a default_output -o ~/Videos/Clips/test_video.mp4 && notify-send Clip Saved"))
-
 hl.unbind("SUPER + E")
 hl.bind("SUPER + E", hl.dsp.exec_cmd("/home/wellatleastitried/.config/omarchy/plugins/omamail/scripts/mailto.sh"))
 
@@ -27,3 +24,8 @@ hl.config({ input = { kb_options = "caps:escape" } })
 o.window("discord", { workspace = "1" })
 o.window("firefox", { workspace = "2" })
 
+hl.on("hyprland.start", function()
+    hl.exec_cmd([[gpu-screen-recorder -w DP-4 -f 60 -a default_output -c mp4 -r 30 -restart-replay-on-save yes -o "$HOME/Videos/Clips"]])
+end)
+hl.unbind("SUPER + SHIFT + MINUS")
+hl.bind("SUPER + SHIFT + MINUS", hl.dsp.exec_cmd("killall -SIGUSR1 gpu-screen-recorder && notify-send 'Clip Saved'"))
