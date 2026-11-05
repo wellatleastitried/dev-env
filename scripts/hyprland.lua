@@ -21,9 +21,6 @@ hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO
 
 hl.config({ input = { kb_options = "caps:escape" } })
 
-o.window("discord", { workspace = "1" })
-o.window("firefox", { workspace = "2" })
-
 hl.on("hyprland.start", function()
     hl.exec_cmd([[gpu-screen-recorder -w DP-4 -f 60 -a default_output -c mp4 -r 30 -restart-replay-on-save yes -o "$HOME/Videos/Clips"]])
 end)
