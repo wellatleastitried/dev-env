@@ -25,7 +25,6 @@ fi
 
 AGENTS_DIR=$TARGET_DIR/agents
 for agent in $(ls "$SOURCE_CLAUDE_DIR/agents"); do
-    echo "Checking $agent"
     if [ ! -f "$AGENTS_DIR/$agent" ]; then
         cp $SOURCE_CLAUDE_DIR/agents/$agent $AGENTS_DIR
     else
