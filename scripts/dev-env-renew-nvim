@@ -8,6 +8,8 @@ fi
 mkdir -p ~/.config
 cp -r "$PATH_DEV_ENV/config/nvim" ~/.config/
 ln -sf "$HOME/.local/state/omarchy/current/theme/neovim.lua" "$HOME/.config/nvim/lua/plugins/theme.lua"
+mkdir -p ~/Github/jbang-lsp.nvim/
+cp -r "$PATH_DEV_ENV/config/jbang-lsp.nvim" ~/Github/jbang-lsp.nvim/
 echo -e "${GREEN}nvim config renewed.${NC}"
 
 # Set up Omarchy hook for theme syncing

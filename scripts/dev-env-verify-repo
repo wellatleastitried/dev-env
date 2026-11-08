@@ -1,5 +1,16 @@
 #!/bin/bash
 
+echo "Checking for updates..."
+git fetch origin
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+commits_behind=$(git rev-list --count HEAD..origin/$current_branch)
+if [ "$commits_behind" -gt 0 ]; then
+    echo "Updates available. Pulling latest changes..."
+    git pull
+else
+    echo "No updates available."
+fi
+
 if [ "$PERMS_DEV_ENV" == "owner" ]; then
     source "$PATH_DEV_ENV/scripts/dev-env-detect-shell"
 
@@ -35,16 +46,7 @@ if [ "$PERMS_DEV_ENV" == "owner" ]; then
 
     cd $PATH_DEV_ENV
 
-    echo "Checking for updates..."
-    git fetch origin
-    current_branch=$(git rev-parse --abbrev-ref HEAD)
-    commits_behind=$(git rev-list --count HEAD..origin/$current_branch)
-    if [ "$commits_behind" -gt 0 ]; then
-        echo "Updates available. Pulling latest changes..."
-        git pull
-    else
-        echo "No updates available."
-    fi
+    # Placeholder
 
     if git status | grep -q "nothing to commit"; then
         echo "No changes, proceeding with update..."
