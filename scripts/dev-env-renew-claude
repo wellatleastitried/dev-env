@@ -1,0 +1,40 @@
+#!/bin/bash
+
+echo "Renewing dev-env claude..."
+
+SOURCE_CLAUDE_DIR="$PATH_DEV_ENV/config/claude"
+SOURCE_CLAUDE_MD="$SOURCE_CLAUDE_DIR/CLAUDE.md"
+
+if [ ! -f "$SOURCE_CLAUDE_MD" ]; then
+    echo -e "${RED:-}Source skill not found: $SOURCE_SKILL_FILE${NC:-}" >&2
+    exit 1
+fi
+
+TARGET_DIR="$HOME/.claude"
+if [ ! -d "$TARGET_DIR" ]; then
+    mkdir -p "$TARGET_DIR"
+    echo -e "${GREEN}Created $TARGET_DIR${NC}"
+fi
+
+if cmp -s "$SOURCE_CLAUDE_MD" "$TARGET_DIR/CLAUDE.md"; then
+    echo -e "${GREEN}CLAUDE.md is already up to date at $dest${NC}"
+else
+    cp "$SOURCE_CLAUDE_MD" "$TARGET_DIR/CLAUDE.md"
+    echo -e "${GREEN}Copied CLAUDE.md to $TARGET_DIR${NC}"
+fi
+
+AGENTS_DIR=$TARGET_DIR/agents
+for agent in $(ls "$SOURCE_CLAUDE_DIR/agents"); do
+    if [ ! -f "$AGENTS_DIR/$agent" ]; then
+        cp $SOURCE_CLAUDE_DIR/agents/$agent $AGENTS_DIR
+    else
+        if cmp -s "$SOURCE_CLAUDE_DIR/agents/$agent" "$AGENTS_DIR/$agent"; then
+            echo -e "${GREEN}$AGENTS_DIR/$agent is already up to date${NC}"
+        else
+            cp $SOURCE_CLAUDE_DIR/agents/$agent $AGENTS_DIR
+            echo -e "${GREEN}Copied $agent to $AGENTS_DIR${NC}"
+        fi
+    fi
+done
+
+echo -e "${GREEN}dev-env claude renewed.${NC}"
